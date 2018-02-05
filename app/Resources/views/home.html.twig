@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Qweeby CSV Validator!{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="style.css">
+{% endblock %}
+
+{% block body %}
+    <div class="w3-content" style="max-width:1400px">
+        <div class="w3-container w3-center">
+            <header>
+                <img src="logo.png" alt="logo"/>
+                <p class="" style="font-size: 30px">CSV Validator</p>
+            </header>
+            {{ form_start(form) }}
+            <label for="{{ form.file.vars.id }}" class="w3-button w3-black">Choisir un fichier CSV</label>
+            <span>Choisissez les champs que vous souhaitez vérifier :</span>
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <footer class="w3-container w3-dark-grey w3-margin-top">
+        <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+    </footer>
+{% endblock %}

@@ -1,0 +1,43 @@
+body, h1, h2, h3, h4, h5 {
+    font-family: "Arial Black", Gadget, sans-serif;
+}
+
+div {
+    text-align: center;
+}
+
+div span.gauche {
+    float: left;
+}
+
+div span.droite {
+    float: right;
+}
+
+.square-container {
+    overflow: auto
+}
+
+.square-container .square {
+    float: left;
+    width: 100px;
+    height: 100px;
+}
+
+.right {
+    position: absolute;
+    right: 0px;
+    width: 300px;
+    border: 3px solid #73AD21;
+    padding: 10px;
+    display: inline;
+
+}
+
+.form-check {
+    display: inline-block;
+}
+
+#conteneur {
+    display: flex;
+}
