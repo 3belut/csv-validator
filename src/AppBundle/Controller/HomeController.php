@@ -73,14 +73,14 @@ class HomeController extends Controller
             // On stocke le CSV dans la session
             $session->set('csv', serialize($csv));
 
-            return $this->redirectToRoute('running');
+            // TODO : on lance la vérification, sur la même page ou via une redirection
         }
 
         return $this->render('home.html.twig', array('form' => $form->createView()));
     }
 
     /**
-     * Cette fonction retourne la page contenant la barre de progression.
+     * Cette fonction contient le script de vérification du fichier CSV.
      *
      * @Route("/running", name="running")
      */
