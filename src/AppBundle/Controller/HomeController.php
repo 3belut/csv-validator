@@ -73,9 +73,11 @@ class HomeController extends Controller
             // On stocke le CSV dans la session
             $session->set('csv', serialize($csv));
 
-            // TODO : on lance la vérification, sur la même page ou via une redirection
+            // On retourne la page contenant la barre de progression
+            return $this->render('running.html.twig');
         }
 
+        // On retourne le formulaire
         return $this->render('home.html.twig', array('form' => $form->createView()));
     }
 
@@ -107,6 +109,9 @@ class HomeController extends Controller
      */
     public function getProgressAction(SessionInterface $session)
     {
-        return new Response("progress");
+        if ($session->has('progress')) {
+            return new Response(json_encode($session->get('progress')));
+        } else
+            return new Response(json_encode(0));
     }
 }
