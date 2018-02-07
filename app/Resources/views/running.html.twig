@@ -11,28 +11,29 @@
         <div class="w3-light-grey">
             <div id="progressBar" class="w3-container w3-green w3-center" style="width:20%">20%</div>
         </div>
-        <br>
-        <button class="w3-button w3-green" onclick="move()">Click Me</button>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     <script>
-        function move() {
+        window.onload = function () {
             var elem = document.getElementById("progressBar");
             var width = 0;
+            setInterval(updateProgress, 500);
 
-            $.ajax({
-                url: 'progress',
-                dataType: 'json',
-                success: function (result) {
-                    width = result;
-                    elem.style.width = width + '%';
-                    elem.innerHTML = result + '%';
-                },
-                error: function () {
-                }
-            })
+            function updateProgress() {
+                $.ajax({
+                    url: 'progress',
+                    dataType: 'json',
+                    success: function (result) {
+                        width = result;
+                        elem.style.width = width + '%';
+                        elem.innerHTML = result + '%';
+                    }
+                });
+                if (width === 100)
+                    window.location.href = "results";
+            }
         }
     </script>
 {% endblock %}

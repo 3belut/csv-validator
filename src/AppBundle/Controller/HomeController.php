@@ -110,8 +110,16 @@ class HomeController extends Controller
     public function getProgressAction(SessionInterface $session)
     {
         if ($session->has('progress')) {
-            return new Response(json_encode($session->get('progress')));
-        } else
-            return new Response(json_encode(0));
+            // On incrémente la valeur pour les tests
+            $progress = $session->get('progress');
+            if ($progress < 100)
+                $progress++;
+            else
+                $progress = 0;
+        } else {
+            $progress = 0;
+        }
+        $session->set('progress', $progress);
+        return new Response(json_encode($progress));
     }
 }
