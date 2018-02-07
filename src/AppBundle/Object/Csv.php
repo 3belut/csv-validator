@@ -39,6 +39,13 @@ class Csv
         $row = 0;
 
         if ($handle = fopen($path, "r")) {
+            // On convertit le fichier en UTF-8
+            $fileContent = file_get_contents($path);
+            if (mb_check_encoding($fileContent, 'UTF-8'))
+                file_put_contents($path, $fileContent);
+            else
+                file_put_contents($path, utf8_encode($fileContent));
+
             $this->header = fgetcsv($handle, 0, ";");
 
             while ($data = fgetcsv($handle, 0, ";")) {
