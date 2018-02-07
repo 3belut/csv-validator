@@ -93,14 +93,16 @@ class HomeController extends Controller
             $session->set('raison_sociale', $fileUpload->isRaisonSocialeChecked());
             $session->set('profil_utilisateur', $fileUpload->isProfilUtilisateurChecked());
 
-            return $this->redirectToRoute('running');
+            // On retourne la page contenant la barre de progression
+            return $this->render('running.html.twig');
         }
 
+        // On retourne le formulaire
         return $this->render('home.html.twig', array('form' => $form->createView()));
     }
 
     /**
-     * Cette fonction retourne la page contenant la barre de progression.
+     * Cette fonction contient le script de vérification du fichier CSV.
      *
      * @Route("/running", name="running")
      */
@@ -305,7 +307,18 @@ class HomeController extends Controller
      */
     public function getProgressAction(SessionInterface $session)
     {
-        return new Response("progress");
+        if ($session->has('progress')) {
+            // On incrémente la valeur pour les tests
+            $progress = $session->get('progress');
+            if ($progress < 100)
+                $progress++;
+            else
+                $progress = 0;
+        } else {
+            $progress = 0;
+        }
+        $session->set('progress', $progress);
+        return new Response(json_encode($progress));
     }
 
 

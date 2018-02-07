@@ -113,11 +113,26 @@ class Csv
         $this->path = $path;
     }
 
+    /**
+     * Cette fonction remplit l'objet à partir d'un fichier CSV.
+     *
+     * Les encodages supportés sont l'UTF-8 et l'ISO 8859-1 ou apparenté (alphabet occidental).
+     *
+     * @param string $path
+     *      Le chemin vers le fichier CSV.
+     */
     public function lire_csv($path)
     {
         $row = 0;
 
         if ($handle = fopen($path, "r")) {
+            // On convertit le fichier en UTF-8
+            $fileContent = file_get_contents($path);
+            if (mb_check_encoding($fileContent, 'UTF-8'))
+                file_put_contents($path, $fileContent);
+            else
+                file_put_contents($path, utf8_encode($fileContent));
+
             $this->header = fgetcsv($handle, 0, ";");
 
             while ($data = fgetcsv($handle, 0, ";")) {
