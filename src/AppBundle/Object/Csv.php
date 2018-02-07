@@ -25,14 +25,93 @@ class Csv
         "accord",
         "langue",
         "type de client",
-        "piece jointe",
-        "groupe",
         "code client"
     );
 
     private $size;
     private $header;
     private $content;
+    private $path;
+
+    /**
+     * @return array
+     */
+    public static function getTrueHeader()
+    {
+        return self::$trueHeader;
+    }
+
+    /**
+     * @param array $trueHeader
+     */
+    public static function setTrueHeader($trueHeader)
+    {
+        self::$trueHeader = $trueHeader;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
+     * @param mixed $size
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHeader()
+    {
+        return $this->header;
+    }
+
+    /**
+     * @param mixed $header
+     */
+    public function setHeader($header)
+    {
+        $this->header = $header;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param mixed $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param mixed $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
 
     public function lire_csv($path)
     {
@@ -61,9 +140,7 @@ class Csv
                 $this->content[$row]['accord'] = $data[16];
                 $this->content[$row]['langue'] = $data[17];
                 $this->content[$row]['type_client'] = $data[18];
-                $this->content[$row]['piece_jointe'] = $data[19];
-                $this->content[$row]['groupe'] = $data[20];
-                $this->content[$row]['code_client'] = $data[21];
+                $this->content[$row]['code_client'] = $data[19];
                 $row++;
             }
             $this->size = $row;

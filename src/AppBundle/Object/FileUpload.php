@@ -6,14 +6,47 @@ class FileUpload
 {
     private $file;
 
-    private $tvaChecked = false;
-    private $siretChecked = false;
-    private $emailChecked = false;
-    private $langueChecked = false;
-    private $clientChecked = false;
-    private $pieceJointeChecked = false;
+    private $tvaChecked = true;
+    private $siretChecked = true;
+    private $emailChecked = true;
+    private $langueChecked = true;
+    private $clientChecked = true;
+    private $accordChecked = true;
     private $telChecked = false;
-    private $raisonSocialeChecked = false;
+    private $raisonSocialeChecked = true;
+    private $profilUtilisateurChecked = true;
+
+    /**
+     * @return bool
+     */
+    public function isProfilUtilisateurChecked()
+    {
+        return $this->profilUtilisateurChecked;
+    }
+
+    /**
+     * @param bool $profilUtilisateurChecked
+     */
+    public function setProfilUtilisateurChecked($profilUtilisateurChecked)
+    {
+        $this->profilUtilisateurChecked = $profilUtilisateurChecked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAccordChecked()
+    {
+        return $this->accordChecked;
+    }
+
+    /**
+     * @param bool $accordChecked
+     */
+    public function setAccordChecked($accordChecked)
+    {
+        $this->accordChecked = $accordChecked;
+    }
 
     /**
      * @return mixed
@@ -109,22 +142,6 @@ class FileUpload
     public function setClientChecked($clientChecked)
     {
         $this->clientChecked = $clientChecked;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPieceJointeChecked()
-    {
-        return $this->pieceJointeChecked;
-    }
-
-    /**
-     * @param bool $pieceJointeChecked
-     */
-    public function setPieceJointeChecked($pieceJointeChecked)
-    {
-        $this->pieceJointeChecked = $pieceJointeChecked;
     }
 
     /**

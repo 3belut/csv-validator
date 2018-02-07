@@ -15,8 +15,14 @@
                 <p class="" style="font-size: 30px">CSV Validator</p>
             </header>
             {{ form_start(form) }}
-            <label for="{{ form.file.vars.id }}" class="w3-button w3-black">Choisir un fichier CSV</label>
-            <span>Choisissez les champs que vous souhaitez vérifier :</span>
+            {{ form_widget(form.file, {'attr': {'style': 'display:none;'}}) }}
+
+
+            <label for="{{ form.file.vars.id }}" class="w3-button w3-black">Soumettre un fichier</label>
+            <label><br><br>Choisissez les champs que vous souhaitez vérifier: <br><br></label>
+
+
+
             {{ form_rest(form) }}
             {{ form_end(form) }}
         </div>
