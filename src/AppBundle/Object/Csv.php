@@ -34,6 +34,14 @@ class Csv
     private $header;
     private $content;
 
+    /**
+     * Cette fonction remplit l'objet à partir d'un fichier CSV.
+     *
+     * Les encodages supportés sont l'UTF-8 et l'ISO 8859-1 ou apparenté (alphabet occidental).
+     *
+     * @param string $path
+     *      Le chemin vers le fichier CSV.
+     */
     public function lire_csv($path)
     {
         $row = 0;
