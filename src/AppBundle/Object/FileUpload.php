@@ -9,10 +9,61 @@ class FileUpload
     private $tvaChecked = true;
     private $siretChecked = true;
     private $emailChecked = true;
+
+    /**
+     * @return bool
+     */
+    public function isCodePostalChecked()
+    {
+        return $this->codePostalChecked;
+    }
+
+    /**
+     * @param bool $codePostalChecked
+     */
+    public function setCodePostalChecked($codePostalChecked)
+    {
+        $this->codePostalChecked = $codePostalChecked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVilleChecked()
+    {
+        return $this->villeChecked;
+    }
+
+    /**
+     * @param bool $villeChecked
+     */
+    public function setVilleChecked($villeChecked)
+    {
+        $this->villeChecked = $villeChecked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdresseChecked()
+    {
+        return $this->adresseChecked;
+    }
+
+    /**
+     * @param bool $adresseChecked
+     */
+    public function setAdresseChecked($adresseChecked)
+    {
+        $this->adresseChecked = $adresseChecked;
+    }
     private $langueChecked = true;
     private $clientChecked = true;
     private $accordChecked = true;
     private $telChecked = false;
+    private $codePostalChecked = false;
+    private $villeChecked = false;
+    private $adresseChecked = false;
     private $raisonSocialeChecked = true;
     private $profilUtilisateurChecked = true;
 
