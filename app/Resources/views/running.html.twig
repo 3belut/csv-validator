@@ -26,6 +26,14 @@
             var m;
             var s;
 
+            $.ajax({
+                url: 'running',
+                dataType: 'json',
+                success: function (result) {
+                    window.location.href = 'results';
+                }
+            });
+
             setInterval(updateProgress, interval);
 
             function updateProgress() {

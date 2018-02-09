@@ -349,10 +349,9 @@ class HomeController extends Controller
                 }
             }
             $this->indiceLigne2Check = array_diff($this->indiceLigne2Check, $this->indiceWrongLigne);
-
         }
 
-        return $this->render('results.html.twig');
+        return new Response(json_encode(0));
     }
 
     /**
@@ -362,10 +361,7 @@ class HomeController extends Controller
      */
     public function resultsAction(SessionInterface $session)
     {
-        $csv = unserialize($session->get('csv'));
-        //*************************************DOWNLOAD***********************\
-        $csv->downLoadCsv($this->indiceLigne2Check);
-        return new Response("results");
+        return $this->render('results.html.twig');
     }
 
     /**
@@ -390,6 +386,47 @@ class HomeController extends Controller
         return new Response(json_encode($progress));
     }
 
+    /**
+     * Cette fonction retourne le fichier CSV valide sous forme de téléchargement.
+     *
+     * @Route("/valid", name="valid")
+     */
+    public function validAction(SessionInterface $session)
+    {
+        $csv = unserialize($session->get('csv'));
+
+        $file = $csv->getFinalCsv($this->indiceLigne2Check);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="valide.csv"');
+        $response->setCharset('utf-8');
+        $response->setContent($file);
+        $response->setStatusCode(Response::HTTP_OK);
+
+        return $response;
+    }
+
+    /**
+     * Cette fonction retourne le fichier CSV invalide sous forme de téléchargement.
+     *
+     * @Route("/invalid", name="invalid")
+     */
+    public function invalidAction(SessionInterface $session)
+    {
+        $csv = unserialize($session->get('csv'));
+
+        $file = $csv->getFinalCsv($this->indiceWrongLigne);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="invalide.csv"');
+        $response->setCharset('utf-8');
+        $response->setContent($file);
+        $response->setStatusCode(Response::HTTP_OK);
+
+        return $response;
+    }
 
     public function sirenToTVAKey($siren)
     {

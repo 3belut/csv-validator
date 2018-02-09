@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block Results %}
+{% block body %}
     <div class="w3-content" style="max-width:1400px">
-
-        <form id="file" method="POST" action="HomeController.php" enctype="multipart/form-data">
-
-            <input type="submit" value="CSV valide" name="block">
-            <input type="submit" value="CSV invalide" name="block">
-
-        </form>
-
+        <div class="w3-container w3-center">
+            <header>
+                <img src="logo.png" alt="logo"/>
+                <p class="" style="font-size: 30px">CSV Validator</p>
+            </header>
+            <a href="valid" class="w3-button w3-orange">Valide</a>
+            <a href="{{ path('invalid') }}" class="w3-button w3-orange">Invalide</a>
+        </div>
     </div>
 {% endblock %}
