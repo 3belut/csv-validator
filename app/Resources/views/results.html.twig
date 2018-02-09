@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block Results %}
+    <div class="w3-content" style="max-width:1400px">
+
+        <form id="file" method="POST" action="HomeController.php" enctype="multipart/form-data">
+
+            <input type="submit" value="CSV valide" name="block">
+            <input type="submit" value="CSV invalide" name="block">
+
+        </form>
+
+    </div>
+{% endblock %}

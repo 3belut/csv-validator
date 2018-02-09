@@ -24,7 +24,7 @@ class HomeController extends Controller
         'mt', 'fy', 'li', 'pl', 'cs', 'ro', 'sk', 'sl');
     private $conformiteSiret = true;
     private $valideRow = true;
-    private $siretOrTva =true;
+    private $siretOrTva = true;
     private $indiceWrongLigne = array();
     private $indiceLigne2Check = array();
     private $indiceSiret2Check = array();
@@ -98,15 +98,14 @@ class HomeController extends Controller
             // On charge le fichier CSV dans la classe Csv
             $csv = new Csv();
             $csv->lire_csv($fileUpload->getFile()->getPathname());
-            if($fileUpload->isRaisonSocialeChecked()){
-                if($fileUpload->isSiretChecked()==false && $fileUpload->isTvaChecked()==false){
+            if ($fileUpload->isRaisonSocialeChecked()) {
+                if ($fileUpload->isSiretChecked() == false && $fileUpload->isTvaChecked() == false) {
                     $fileUpload->setSiretChecked(true);
                 }
-                if($fileUpload->isTvaChecked()==true){
-                    $this->siretOrTva=false;
+                if ($fileUpload->isTvaChecked() == true) {
+                    $this->siretOrTva = false;
                 }
             }
-
 
 
             // On stocke le CSV dans la session
@@ -147,7 +146,7 @@ class HomeController extends Controller
         $tel = $session->get('tel');
         $raison_sociale = $session->get('raison_sociale');
         $profil_utilisateur = $session->get('profil_utilisateur');
-        $SIRETORTVA=$session->get('siretOrTva');
+        $SIRETORTVA = $session->get('siretOrTva');
 
         $sirenValidation = new SirenValidation();
         $listSiret = array();
@@ -262,8 +261,8 @@ class HomeController extends Controller
                 if ($tva && $this->valideRow) {
                     $TVA = ($csv->getContent())[$i]['tva_intra'];
                     if (strcmp($TVA, "") != 0) {
-                        $this->indiceTVA2Check[$i]=$TVA;
-                    }else{
+                        $this->indiceTVA2Check[$i] = $TVA;
+                    } else {
                         $this->valideRow = false;
                         array_push($this->indiceWrongLigne, $i);
                     }
@@ -333,16 +332,16 @@ class HomeController extends Controller
         if ($raison_sociale) {
             for ($i = 0; $i < count($this->indiceLigne2Check); $i++) {
                 $raison_csv = ($csv->getContent())[array_values($this->indiceLigne2Check)[$i]]['raison_sociale'];
-                $API=null;
-                $siretChecked=null;
+                $API = null;
+                $siretChecked = null;
 
-                if ($SIRETORTVA){
-                    $API=$resultAPI;
+                if ($SIRETORTVA) {
+                    $API = $resultAPI;
                     $siretChecked = ($csv->getContent())[array_values($this->indiceLigne2Check)[$i]]['siret'];
-                }else{
-                    $API=$resultAPISiren;
-                    $TVACSV= ($csv->getContent())[array_values($this->indiceLigne2Check)[$i]]['tva_intra'];
-                    $siretChecked=substr($TVACSV, 4);//ce qui est en réalité le siren et non pas le siret
+                } else {
+                    $API = $resultAPISiren;
+                    $TVACSV = ($csv->getContent())[array_values($this->indiceLigne2Check)[$i]]['tva_intra'];
+                    $siretChecked = substr($TVACSV, 4);//ce qui est en réalité le siren et non pas le siret
                 }
                 similar_text($API[$siretChecked]['raison_sociale'], $raison_csv, $percent);
                 if ($percent < 50) {//TODO augmenter à 60 si on corrige
@@ -352,7 +351,8 @@ class HomeController extends Controller
             $this->indiceLigne2Check = array_diff($this->indiceLigne2Check, $this->indiceWrongLigne);
 
         }
-        return new Response("running");
+
+        return $this->render('results.html.twig');
     }
 
     /**
@@ -362,6 +362,9 @@ class HomeController extends Controller
      */
     public function resultsAction(SessionInterface $session)
     {
+        $csv = unserialize($session->get('csv'));
+        //*************************************DOWNLOAD***********************\
+        $csv->downLoadCsv($this->indiceLigne2Check);
         return new Response("results");
     }
 
@@ -390,9 +393,9 @@ class HomeController extends Controller
 
     public function sirenToTVAKey($siren)
     {
-        $result=(12 + 3 * ($siren % 97)) % 97;
-        if(strlen($result)==1){
-            $result="0".$result;
+        $result = (12 + 3 * ($siren % 97)) % 97;
+        if (strlen($result) == 1) {
+            $result = "0" . $result;
         }
         return $result;
     }

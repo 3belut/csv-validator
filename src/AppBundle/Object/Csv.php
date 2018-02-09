@@ -200,4 +200,24 @@ class Csv
 
         return implode($delimiter, $output);
     }
+    public function downLoadCsv(array $indiceLignes, $delimiteur=';', $enclosure='"'){
+        header('Content-Disposition: attachment; filename="invalide.csv"');
+        $output=null;
+        $l=0;
+        while($l<(count(self::getTrueHeader())-1)){
+            $output= $output.$enclosure.self::getTrueHeader()[$l].$enclosure.$delimiteur;
+            $l++;
+        }
+        $output= $output.$enclosure.self::getTrueHeader()[$l].$enclosure."\r\n";
+        for ($i=0; $i<count($indiceLignes);$i++){
+            $ligne = ($this->getContent())[array_values($indiceLignes)[$i]];
+            $j=0;
+            while($j<(count($ligne)-1)){
+                $output= $output.$enclosure.array_values($ligne)[$j].$enclosure.$delimiteur;
+                $j++;
+            }
+            $output= $output.$enclosure.array_values($ligne)[$j].$enclosure."\r\n";
+        }
+        echo $output;
+    }
 }
