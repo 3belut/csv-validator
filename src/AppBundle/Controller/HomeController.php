@@ -351,6 +351,8 @@ class HomeController extends Controller
             $this->indiceLigne2Check = array_diff($this->indiceLigne2Check, $this->indiceWrongLigne);
         }
 
+        $session->set('valid', $this->indiceLigne2Check);
+        $session->set('invalid', $this->indiceWrongLigne);
         return new Response(json_encode(0));
     }
 
@@ -394,8 +396,9 @@ class HomeController extends Controller
     public function validAction(SessionInterface $session)
     {
         $csv = unserialize($session->get('csv'));
+        $valid = $session->get('valid');
 
-        $file = $csv->getFinalCsv($this->indiceLigne2Check);
+        $file = $csv->getFinalCsv($valid);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
@@ -415,8 +418,9 @@ class HomeController extends Controller
     public function invalidAction(SessionInterface $session)
     {
         $csv = unserialize($session->get('csv'));
+        $invalid = $session->get('invalid');
 
-        $file = $csv->getFinalCsv($this->indiceWrongLigne);
+        $file = $csv->getFinalCsv($invalid);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
