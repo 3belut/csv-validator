@@ -169,7 +169,7 @@ class HomeController extends Controller
                         if (strcmp(($csv->getContent())[$i]['accord'], 'O') == 0) {
                             $needEmail = true;
                         }
-                        if (!in_array($i, $this->indiceGoodLigne)) {
+                        if (!in_array($i, $this->indiceGoodLigne)&&$this->trueLine) {
                             array_push($this->indiceGoodLigne, $i);
                         }
                     } else {
@@ -190,7 +190,7 @@ class HomeController extends Controller
                 //********************VERIF TYPE CLIENT********************************************\\
                 if ($client) {
                     if (strcmp(($csv->getContent())[$i]['type_client'], 'b2b') == 0 || strcmp(($csv->getContent())[$i]['type_client'], 'b2c') == 0) {
-                        if (!in_array($i, $this->indiceGoodLigne)) {
+                        if (!in_array($i, $this->indiceGoodLigne)&& $this->trueLine) {
                             array_push($this->indiceGoodLigne, $i);
                         }
                     } else {
@@ -214,7 +214,9 @@ class HomeController extends Controller
                         || strcmp(($csv->getContent())[$i]['profil'], "4") == 0
                         || strcmp(($csv->getContent())[$i]['profil'], "5") == 0
                         || strcmp(($csv->getContent())[$i]['profil'], "6") == 0) {
-                        //profil utilisateur valide
+                        if (!in_array($i, $this->indiceGoodLigne)&& $this->trueLine) {
+                            array_push($this->indiceGoodLigne, $i);
+                        }
                     } else {
                         if (!array_key_exists($i, $this->codeErreur)) {
                             $this->codeErreur[$i] = "Profil utilisateur";
@@ -222,6 +224,9 @@ class HomeController extends Controller
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Profil utilisateur";
                         }
                         if ($this->trueLine) {
+                            if (in_array($i, $this->indiceGoodLigne)) {
+                                unset($this->indiceGoodLigne[$i]);
+                            }
                             array_push($this->indiceWrongLigne, $i);
                         }
                         $this->trueLine = false;
@@ -232,7 +237,9 @@ class HomeController extends Controller
                     if (preg_match("#^((\+33)|0)[1-9]([-\/. ]?[0-9]{2}){4}( +)?$#", ($csv->getContent())[$i]['telephone']) == true
                         || strpos(($csv->getContent())[$i]['telephone'], '_') !== false
                         || strcmp(($csv->getContent())[$i]['telephone'], "") == 0) {
-                        //telephone valide
+                        if (!in_array($i, $this->indiceGoodLigne)&& $this->trueLine) {
+                            array_push($this->indiceGoodLigne, $i);
+                        }
                     } else {
                         if (!array_key_exists($i, $this->codeErreur)) {
                             $this->codeErreur[$i] = "Téléphone";
@@ -240,6 +247,9 @@ class HomeController extends Controller
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Téléphone";
                         }
                         if ($this->trueLine) {
+                            if (in_array($i, $this->indiceGoodLigne)) {
+                                unset($this->indiceGoodLigne[$i]);
+                            }
                             array_push($this->indiceWrongLigne, $i);
                         }
                         $this->trueLine = false;
@@ -256,7 +266,9 @@ class HomeController extends Controller
                         $j++;
                     }
                     if ($find) {
-                        //lanque valide
+                        if (!in_array($i, $this->indiceGoodLigne)&&$this->trueLine) {
+                            array_push($this->indiceGoodLigne, $i);
+                        }
                     } else {
                         if (!array_key_exists($i, $this->codeErreur)) {
                             $this->codeErreur[$i] = "Langue";
@@ -264,6 +276,9 @@ class HomeController extends Controller
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Langue";
                         }
                         if ($this->trueLine) {
+                            if (in_array($i, $this->indiceGoodLigne)) {
+                                unset($this->indiceGoodLigne[$i]);
+                            }
                             array_push($this->indiceWrongLigne, $i);
                         }
                         $this->trueLine = false;
@@ -280,12 +295,17 @@ class HomeController extends Controller
                                 $this->codeErreur[$i] = $this->codeErreur[$i] . ", Email indispensable";
                             }
                             if ($this->trueLine) {
+                                if (in_array($i, $this->indiceGoodLigne)) {
+                                    unset($this->indiceGoodLigne[$i]);
+                                }
                                 array_push($this->indiceWrongLigne, $i);
                             }
                             $this->trueLine = false;
                         } else {
                             if ($mailValidation->isValid(($csv->getContent())[$i]['email'])) {
-                                // email valide!!
+                                if (!in_array($i, $this->indiceGoodLigne)&& $this->trueLine) {
+                                    array_push($this->indiceGoodLigne, $i);
+                                }
                             } else {
                                 if (!array_key_exists($i, $this->codeErreur)) {
                                     $this->codeErreur[$i] = "Email";
@@ -293,6 +313,9 @@ class HomeController extends Controller
                                     $this->codeErreur[$i] = $this->codeErreur[$i] . ", Email";
                                 }
                                 if ($this->trueLine) {
+                                    if (in_array($i, $this->indiceGoodLigne)) {
+                                        unset($this->indiceGoodLigne[$i]);
+                                    }
                                     array_push($this->indiceWrongLigne, $i);
                                 }
                                 $this->trueLine = false;
@@ -300,7 +323,9 @@ class HomeController extends Controller
                         }
                     } else {
                         if ($mailValidation->isValid(($csv->getContent())[$i]['email'])) {
-                            // email valide!!
+                            if (!in_array($i, $this->indiceGoodLigne)&& $this->trueLine) {
+                                array_push($this->indiceGoodLigne, $i);
+                            }
                         } else {
                             if (!array_key_exists($i, $this->codeErreur)) {
                                 $this->codeErreur[$i] = "Email";
@@ -308,6 +333,9 @@ class HomeController extends Controller
                                 $this->codeErreur[$i] = $this->codeErreur[$i] . ", Email";
                             }
                             if ($this->trueLine) {
+                                if (in_array($i, $this->indiceGoodLigne)) {
+                                    unset($this->indiceGoodLigne[$i]);
+                                }
                                 array_push($this->indiceWrongLigne, $i);
                             }
                             $this->trueLine = false;
@@ -323,6 +351,9 @@ class HomeController extends Controller
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Raison sociale";
                         }
                         if ($this->trueLine) {
+                            if (in_array($i, $this->indiceGoodLigne)) {
+                                unset($this->indiceGoodLigne[$i]);
+                            }
                             array_push($this->indiceWrongLigne, $i);
                         }
                         $this->trueLine = false;
@@ -345,6 +376,9 @@ class HomeController extends Controller
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Tva";
                         }
                         if ($this->trueLine) {
+                            if (in_array($i, $this->indiceGoodLigne)) {
+                                unset($this->indiceGoodLigne[$i]);
+                            }
                             array_push($this->indiceWrongLigne, $i);
                         }
                         $this->trueLine = false;
@@ -559,6 +593,9 @@ class HomeController extends Controller
                     $this->codeErreur[$i] = $this->codeErreur[$i] . ", Siret non conforme";
                 }
                 if ($this->trueLine) {
+                    if (in_array($i, $this->indiceGoodLigne)) {
+                        unset($this->indiceGoodLigne[$i]);
+                    }
                     array_push($this->indiceWrongLigne, $i);
                 }
                 $this->trueLine = false;
@@ -570,6 +607,9 @@ class HomeController extends Controller
                 $this->codeErreur[$i] = $this->codeErreur[$i] . ", Siret";
             }
             if ($this->trueLine) {
+                if (in_array($i, $this->indiceGoodLigne)) {
+                    unset($this->indiceGoodLigne[$i]);
+                }
                 array_push($this->indiceWrongLigne, $i);
             }
             $this->trueLine = false;
