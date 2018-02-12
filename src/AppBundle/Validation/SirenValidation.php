@@ -24,8 +24,6 @@ class SirenValidation
         // Le tableau qui contiendra les résultats
         $entreprises = array();
 
-        $_SESSION['progress'] = 0;
-
         // On regroupe les requêtes par paquets de 50 afin de gagner du temps
         $i = 0;
         while ($i < count($sirets)) {
@@ -61,8 +59,6 @@ class SirenValidation
 
                 $entreprises[$siret] = $entreprise;
             }
-
-            $_SESSION['progress'] += 50;
         }
 
         return $entreprises;

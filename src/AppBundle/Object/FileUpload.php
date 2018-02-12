@@ -57,6 +57,7 @@ class FileUpload
     {
         $this->adresseChecked = $adresseChecked;
     }
+
     private $langueChecked = true;
     private $clientChecked = true;
     private $accordChecked = true;
