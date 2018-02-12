@@ -169,17 +169,17 @@ class HomeController extends Controller
                         if (strcmp(($csv->getContent())[$i]['accord'], 'O') == 0) {
                             $needEmail = true;
                         }
-                        if(!in_array($i, $this->indiceGoodLigne)){
+                        if (!in_array($i, $this->indiceGoodLigne)) {
                             array_push($this->indiceGoodLigne, $i);
                         }
                     } else {
-                        if (!array_key_exists($i ,$this->codeErreur)) {
+                        if (!array_key_exists($i, $this->codeErreur)) {
                             $this->codeErreur[$i] = "Accord";
                         } else {
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Accord";
                         }
                         if ($this->trueLine) {
-                            if(in_array($i, $this->indiceGoodLigne)){
+                            if (in_array($i, $this->indiceGoodLigne)) {
                                 unset($this->indiceGoodLigne[$i]);
                             }
                             array_push($this->indiceWrongLigne, $i);
@@ -190,17 +190,19 @@ class HomeController extends Controller
                 //********************VERIF TYPE CLIENT********************************************\\
                 if ($client) {
                     if (strcmp(($csv->getContent())[$i]['type_client'], 'b2b') == 0 || strcmp(($csv->getContent())[$i]['type_client'], 'b2c') == 0) {
-                        if(!in_array($i, $this->indiceGoodLigne)){
+                        if (!in_array($i, $this->indiceGoodLigne)) {
                             array_push($this->indiceGoodLigne, $i);
                         }
                     } else {
-                        if (!array_key_exists($i ,$this->codeErreur)) {
+                        if (!array_key_exists($i, $this->codeErreur)) {
                             $this->codeErreur[$i] = "Type client";
                         } else {
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Type client";
                         }
                         if ($this->trueLine) {
-                            unset($this->indiceGoodLigne[$i]);
+                            if (in_array($i, $this->indiceGoodLigne)) {
+                                unset($this->indiceGoodLigne[$i]);
+                            }
                             array_push($this->indiceWrongLigne, $i);
                         }
                         $this->trueLine = false;
@@ -214,7 +216,7 @@ class HomeController extends Controller
                         || strcmp(($csv->getContent())[$i]['profil'], "6") == 0) {
                         //profil utilisateur valide
                     } else {
-                        if (!array_key_exists($i ,$this->codeErreur)) {
+                        if (!array_key_exists($i, $this->codeErreur)) {
                             $this->codeErreur[$i] = "Profil utilisateur";
                         } else {
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Profil utilisateur";
@@ -232,7 +234,7 @@ class HomeController extends Controller
                         || strcmp(($csv->getContent())[$i]['telephone'], "") == 0) {
                         //telephone valide
                     } else {
-                        if (!array_key_exists($i ,$this->codeErreur)) {
+                        if (!array_key_exists($i, $this->codeErreur)) {
                             $this->codeErreur[$i] = "Téléphone";
                         } else {
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Téléphone";
@@ -256,7 +258,7 @@ class HomeController extends Controller
                     if ($find) {
                         //lanque valide
                     } else {
-                        if (!array_key_exists($i ,$this->codeErreur)) {
+                        if (!array_key_exists($i, $this->codeErreur)) {
                             $this->codeErreur[$i] = "Langue";
                         } else {
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Langue";
@@ -272,7 +274,7 @@ class HomeController extends Controller
                     $mailValidation = new MailValidation();
                     if ($needEmail) {
                         if (strcmp(($csv->getContent())[$i]['email'], "") == 0) {    // est vide
-                            if (!array_key_exists($i ,$this->codeErreur)) {
+                            if (!array_key_exists($i, $this->codeErreur)) {
                                 $this->codeErreur[$i] = "Email indispensable";
                             } else {
                                 $this->codeErreur[$i] = $this->codeErreur[$i] . ", Email indispensable";
@@ -285,7 +287,7 @@ class HomeController extends Controller
                             if ($mailValidation->isValid(($csv->getContent())[$i]['email'])) {
                                 // email valide!!
                             } else {
-                                if (!array_key_exists($i ,$this->codeErreur)) {
+                                if (!array_key_exists($i, $this->codeErreur)) {
                                     $this->codeErreur[$i] = "Email";
                                 } else {
                                     $this->codeErreur[$i] = $this->codeErreur[$i] . ", Email";
@@ -300,7 +302,7 @@ class HomeController extends Controller
                         if ($mailValidation->isValid(($csv->getContent())[$i]['email'])) {
                             // email valide!!
                         } else {
-                            if (!array_key_exists($i ,$this->codeErreur)) {
+                            if (!array_key_exists($i, $this->codeErreur)) {
                                 $this->codeErreur[$i] = "Email";
                             } else {
                                 $this->codeErreur[$i] = $this->codeErreur[$i] . ", Email";
@@ -315,7 +317,7 @@ class HomeController extends Controller
                 //**********************VERIF RAISON SOCIALE******************************************\\
                 if ($raison_sociale) {
                     if (strcmp(($csv->getContent())[$i]['raison_sociale'], "") == 0) {
-                        if (!array_key_exists($i ,$this->codeErreur)) {
+                        if (!array_key_exists($i, $this->codeErreur)) {
                             $this->codeErreur[$i] = "Raison sociale";
                         } else {
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Raison sociale";
@@ -337,7 +339,7 @@ class HomeController extends Controller
                     if (strcmp($TVA, "") != 0) {
                         $this->indiceTVA2Check[$i] = $TVA;
                     } else {
-                        if (!array_key_exists($i ,$this->codeErreur)) {
+                        if (!array_key_exists($i, $this->codeErreur)) {
                             $this->codeErreur[$i] = "Tva";
                         } else {
                             $this->codeErreur[$i] = $this->codeErreur[$i] . ", Tva";
@@ -481,7 +483,7 @@ class HomeController extends Controller
         $csv = unserialize($session->get('csv'));
         $valid = $session->get('valid');
 
-        $file = $csv->getFinalCsv($valid,false);
+        $file = $csv->getFinalCsv($valid, false);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
@@ -551,7 +553,7 @@ class HomeController extends Controller
             if (strpos($siretCsv, 'E') === false && strpos($siretCsv, '+') === false) {
                 $this->indiceSiret2Check[$i] = $siretCsv;
             } else {
-                if (!array_key_exists($i ,$this->codeErreur)) {
+                if (!array_key_exists($i, $this->codeErreur)) {
                     $this->codeErreur[$i] = "Siret non conforme";
                 } else {
                     $this->codeErreur[$i] = $this->codeErreur[$i] . ", Siret non conforme";
@@ -562,7 +564,7 @@ class HomeController extends Controller
                 $this->trueLine = false;
             }
         } else {
-            if (!array_key_exists($i ,$this->codeErreur)) {
+            if (!array_key_exists($i, $this->codeErreur)) {
                 $this->codeErreur[$i] = "Siret";
             } else {
                 $this->codeErreur[$i] = $this->codeErreur[$i] . ", Siret";
