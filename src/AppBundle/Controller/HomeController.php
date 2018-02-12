@@ -23,10 +23,12 @@ class HomeController extends Controller
         'bg', 'lb', 'el', 'hr', 'da', 'et', 'fi', 'sv', 'hu', 'ga', 'lv', 'lt',
         'mt', 'fy', 'li', 'pl', 'cs', 'ro', 'sk', 'sl');
     private $conformiteSiret = true;
-    private $valideRow = true;
     private $siretOrTva = true;
+    private $trueLine = true;
     private $indiceWrongLigne = array();
+    private $indiceGoodLigne = array();
     private $indiceLigne2Check = array();
+    private $codeErreur = array();
     private $indiceSiret2Check = array();
     private $indiceTVA2Check = array();
 
@@ -152,59 +154,97 @@ class HomeController extends Controller
         $listSiret = array();
         $listSiren = array();
         $resultAPI = array();
+        $wrongSirets = array();
 
         if ($csv->verif_header()) {
             $needEmail = false;
-            //echo "on passe le header";
+
             //début des vérifications classées par ordre de complexité
 
             for ($i = 0; $i < $csv->getSize(); $i++) {
-                $this->valideRow = true;
-                //*************************VERIF PIECE JOINTE*************************************\\
-                if ($accord && $this->valideRow) {
+                $this->trueLine = true;
+                //*************************VERIF ACCORD*************************************\\
+                if ($accord) {
                     if (strcmp(($csv->getContent())[$i]['accord'], 'O') == 0 || strcmp(($csv->getContent())[$i]['accord'], 'IF') == 0) {
                         if (strcmp(($csv->getContent())[$i]['accord'], 'O') == 0) {
                             $needEmail = true;
                         }
+                        if(!in_array($i, $this->indiceGoodLigne)){
+                            array_push($this->indiceGoodLigne, $i);
+                        }
                     } else {
-                        $this->valideRow = false;
-                        array_push($this->indiceWrongLigne, $i);
+                        if (!array_key_exists($i ,$this->codeErreur)) {
+                            $this->codeErreur[$i] = "Accord";
+                        } else {
+                            $this->codeErreur[$i] = $this->codeErreur[$i] . ", Accord";
+                        }
+                        if ($this->trueLine) {
+                            if(in_array($i, $this->indiceGoodLigne)){
+                                unset($this->indiceGoodLigne[$i]);
+                            }
+                            array_push($this->indiceWrongLigne, $i);
+                        }
+                        $this->trueLine = false;
                     }
                 }
                 //********************VERIF TYPE CLIENT********************************************\\
-                if ($client && $this->valideRow) {
+                if ($client) {
                     if (strcmp(($csv->getContent())[$i]['type_client'], 'b2b') == 0 || strcmp(($csv->getContent())[$i]['type_client'], 'b2c') == 0) {
-                        //type client valide
+                        if(!in_array($i, $this->indiceGoodLigne)){
+                            array_push($this->indiceGoodLigne, $i);
+                        }
                     } else {
-                        $this->valideRow = false;
-                        array_push($this->indiceWrongLigne, $i);
+                        if (!array_key_exists($i ,$this->codeErreur)) {
+                            $this->codeErreur[$i] = "Type client";
+                        } else {
+                            $this->codeErreur[$i] = $this->codeErreur[$i] . ", Type client";
+                        }
+                        if ($this->trueLine) {
+                            unset($this->indiceGoodLigne[$i]);
+                            array_push($this->indiceWrongLigne, $i);
+                        }
+                        $this->trueLine = false;
                     }
                 }
                 //********************VERIF PROFIL UTILISATEUR********************************\\
-                if ($profil_utilisateur && $this->valideRow) {
+                if ($profil_utilisateur) {
                     if (strcmp(($csv->getContent())[$i]['profil'], "3") == 0
                         || strcmp(($csv->getContent())[$i]['profil'], "4") == 0
                         || strcmp(($csv->getContent())[$i]['profil'], "5") == 0
                         || strcmp(($csv->getContent())[$i]['profil'], "6") == 0) {
                         //profil utilisateur valide
                     } else {
-                        $this->valideRow = false;
-                        array_push($this->indiceWrongLigne, $i);
+                        if (!array_key_exists($i ,$this->codeErreur)) {
+                            $this->codeErreur[$i] = "Profil utilisateur";
+                        } else {
+                            $this->codeErreur[$i] = $this->codeErreur[$i] . ", Profil utilisateur";
+                        }
+                        if ($this->trueLine) {
+                            array_push($this->indiceWrongLigne, $i);
+                        }
+                        $this->trueLine = false;
                     }
                 }
                 //*******************VERIF NUMERO TEL*************************************\\
-                if ($tel && $this->valideRow) {
+                if ($tel) {
                     if (preg_match("#^((\+33)|0)[1-9]([-\/. ]?[0-9]{2}){4}( +)?$#", ($csv->getContent())[$i]['telephone']) == true
                         || strpos(($csv->getContent())[$i]['telephone'], '_') !== false
                         || strcmp(($csv->getContent())[$i]['telephone'], "") == 0) {
                         //telephone valide
                     } else {
-                        $this->valideRow = false;
-                        array_push($this->indiceWrongLigne, $i);
+                        if (!array_key_exists($i ,$this->codeErreur)) {
+                            $this->codeErreur[$i] = "Téléphone";
+                        } else {
+                            $this->codeErreur[$i] = $this->codeErreur[$i] . ", Téléphone";
+                        }
+                        if ($this->trueLine) {
+                            array_push($this->indiceWrongLigne, $i);
+                        }
+                        $this->trueLine = false;
                     }
                 }
                 //*******************VERIF LANGUE**************************************\\
-                if ($langue && $this->valideRow) {
+                if ($langue) {
                     $find = false;
                     $j = 0;
                     while ($j < count($this->languages) && $find == false) {
@@ -216,60 +256,101 @@ class HomeController extends Controller
                     if ($find) {
                         //lanque valide
                     } else {
-                        $this->valideRow = false;
-                        array_push($this->indiceWrongLigne, $i);
+                        if (!array_key_exists($i ,$this->codeErreur)) {
+                            $this->codeErreur[$i] = "Langue";
+                        } else {
+                            $this->codeErreur[$i] = $this->codeErreur[$i] . ", Langue";
+                        }
+                        if ($this->trueLine) {
+                            array_push($this->indiceWrongLigne, $i);
+                        }
+                        $this->trueLine = false;
                     }
                 }
                 //********************VERIF EMAIL************************************\\
-                if ($email && $this->valideRow) {
+                if ($email) {
                     $mailValidation = new MailValidation();
                     if ($needEmail) {
                         if (strcmp(($csv->getContent())[$i]['email'], "") == 0) {    // est vide
-                            $this->valideRow = false;
-                            array_push($this->indiceWrongLigne, $i);
-                            //email invalide car manquant et indispensable
+                            if (!array_key_exists($i ,$this->codeErreur)) {
+                                $this->codeErreur[$i] = "Email indispensable";
+                            } else {
+                                $this->codeErreur[$i] = $this->codeErreur[$i] . ", Email indispensable";
+                            }
+                            if ($this->trueLine) {
+                                array_push($this->indiceWrongLigne, $i);
+                            }
+                            $this->trueLine = false;
                         } else {
                             if ($mailValidation->isValid(($csv->getContent())[$i]['email'])) {
                                 // email valide!!
                             } else {
-                                array_push($this->indiceWrongLigne, $i);
-                                $this->valideRow = false;
+                                if (!array_key_exists($i ,$this->codeErreur)) {
+                                    $this->codeErreur[$i] = "Email";
+                                } else {
+                                    $this->codeErreur[$i] = $this->codeErreur[$i] . ", Email";
+                                }
+                                if ($this->trueLine) {
+                                    array_push($this->indiceWrongLigne, $i);
+                                }
+                                $this->trueLine = false;
                             }
                         }
                     } else {
                         if ($mailValidation->isValid(($csv->getContent())[$i]['email'])) {
                             // email valide!!
                         } else {
-                            $this->valideRow = false;
-                            array_push($this->indiceWrongLigne, $i);
+                            if (!array_key_exists($i ,$this->codeErreur)) {
+                                $this->codeErreur[$i] = "Email";
+                            } else {
+                                $this->codeErreur[$i] = $this->codeErreur[$i] . ", Email";
+                            }
+                            if ($this->trueLine) {
+                                array_push($this->indiceWrongLigne, $i);
+                            }
+                            $this->trueLine = false;
                         }
                     }
                 }
                 //**********************VERIF RAISON SOCIALE******************************************\\
-                if ($raison_sociale && $this->valideRow) {
+                if ($raison_sociale) {
                     if (strcmp(($csv->getContent())[$i]['raison_sociale'], "") == 0) {
-                        array_push($this->indiceWrongLigne, $i);
-                        $this->valideRow = false;
+                        if (!array_key_exists($i ,$this->codeErreur)) {
+                            $this->codeErreur[$i] = "Raison sociale";
+                        } else {
+                            $this->codeErreur[$i] = $this->codeErreur[$i] . ", Raison sociale";
+                        }
+                        if ($this->trueLine) {
+                            array_push($this->indiceWrongLigne, $i);
+                        }
+                        $this->trueLine = false;
                     }
                 }
                 //*********************VERIF SIRET*************************************************\\
-                if ($siret && $this->valideRow) {
+                if ($siret) {
                     $this->verifSiret($csv, $i);
                 }
 
                 //*********************VERIF TVA***************************************\\
-                if ($tva && $this->valideRow) {
+                if ($tva) {
                     $TVA = ($csv->getContent())[$i]['tva_intra'];
                     if (strcmp($TVA, "") != 0) {
                         $this->indiceTVA2Check[$i] = $TVA;
                     } else {
-                        $this->valideRow = false;
-                        array_push($this->indiceWrongLigne, $i);
+                        if (!array_key_exists($i ,$this->codeErreur)) {
+                            $this->codeErreur[$i] = "Tva";
+                        } else {
+                            $this->codeErreur[$i] = $this->codeErreur[$i] . ", Tva";
+                        }
+                        if ($this->trueLine) {
+                            array_push($this->indiceWrongLigne, $i);
+                        }
+                        $this->trueLine = false;
                     }
                 }
             }
         } else {
-            //TODO erreur en-tête non conforme!!
+            $this->codeErreur[0] = "En tête non conforme";
         }
 
         //********************VERIFICATION DU SIRET VIA UN ENVOIE GROUPE A L'API*********\\
@@ -314,9 +395,10 @@ class HomeController extends Controller
             }
             $this->indiceLigne2Check = array_diff($this->indiceLigne2Check, $this->indiceWrongLigne);
         }
+
         if ($siret && $tva) {
-            for ($m = 0; $m < count(array_diff($listSiret, $wrongSirets)); $m++) {
-                $siretAPI = array_diff($listSiret, $wrongSirets)[array_values($this->indiceLigne2Check) [$m]];
+            for ($m = 0; $m < count($this->indiceLigne2Check); $m++) {
+                $siretAPI = array_diff($listSiret, $wrongSirets) [array_values($this->indiceLigne2Check)[$m]];
                 $sirenAPI = substr($siretAPI, 0, -5);
                 $calculatedkey = $this->sirenToTVAKey($sirenAPI);
                 $calculatedTVA = "FR" . $calculatedkey . $sirenAPI;
@@ -351,8 +433,9 @@ class HomeController extends Controller
             $this->indiceLigne2Check = array_diff($this->indiceLigne2Check, $this->indiceWrongLigne);
         }
 
-        $session->set('valid', $this->indiceLigne2Check);
+        $session->set('valid', $this->indiceGoodLigne);
         $session->set('invalid', $this->indiceWrongLigne);
+        $session->set('erreur', $this->codeErreur);
         return new Response(json_encode(0));
     }
 
@@ -398,7 +481,7 @@ class HomeController extends Controller
         $csv = unserialize($session->get('csv'));
         $valid = $session->get('valid');
 
-        $file = $csv->getFinalCsv($valid);
+        $file = $csv->getFinalCsv($valid,false);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
@@ -419,8 +502,9 @@ class HomeController extends Controller
     {
         $csv = unserialize($session->get('csv'));
         $invalid = $session->get('invalid');
+        $erreurs = $session->get('erreur');
 
-        $file = $csv->getFinalCsv($invalid);
+        $file = $csv->getFinalCsv($invalid, true, $erreurs);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
@@ -463,16 +547,30 @@ class HomeController extends Controller
     public function verifSiret($csv, $i)
     {
         $siretCsv = ($csv->getContent())[$i]['siret'];
-        if (strlen($siretCsv) == 14 && $this->conformiteSiret) {
-            if (strpos($siretCsv, 'E') === false || strpos($siretCsv, '+') === false) {
+        if (strlen($siretCsv) == 14) {
+            if (strpos($siretCsv, 'E') === false && strpos($siretCsv, '+') === false) {
                 $this->indiceSiret2Check[$i] = $siretCsv;
             } else {
-                $this->conformiteSiret = false;
-                $this->valideRow = false;
+                if (!array_key_exists($i ,$this->codeErreur)) {
+                    $this->codeErreur[$i] = "Siret non conforme";
+                } else {
+                    $this->codeErreur[$i] = $this->codeErreur[$i] . ", Siret non conforme";
+                }
+                if ($this->trueLine) {
+                    array_push($this->indiceWrongLigne, $i);
+                }
+                $this->trueLine = false;
             }
         } else {
-            $this->valideRow = false;
-            array_push($this->indiceWrongLigne, $i);
+            if (!array_key_exists($i ,$this->codeErreur)) {
+                $this->codeErreur[$i] = "Siret";
+            } else {
+                $this->codeErreur[$i] = $this->codeErreur[$i] . ", Siret";
+            }
+            if ($this->trueLine) {
+                array_push($this->indiceWrongLigne, $i);
+            }
+            $this->trueLine = false;
         }
     }
 }

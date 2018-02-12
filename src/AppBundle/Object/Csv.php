@@ -25,6 +25,8 @@ class Csv
         "accord",
         "langue",
         "type de client",
+        "piece jointe",
+        "groupe",
         "code client"
     );
 
@@ -155,7 +157,9 @@ class Csv
                 $this->content[$row]['accord'] = $data[16];
                 $this->content[$row]['langue'] = $data[17];
                 $this->content[$row]['type_client'] = $data[18];
-                $this->content[$row]['code_client'] = $data[19];
+                $this->content[$row]['piece_jointe'] = $data[19];
+                $this->content[$row]['groupe'] = $data[20];
+                $this->content[$row]['code_client'] = $data[21];
                 $row++;
             }
             $this->size = $row;
@@ -178,48 +182,36 @@ class Csv
         }
     }
 
-    public function arrayToCsv(array &$fields, $delimiter = ';', $enclosure = '"', $encloseAll = false, $nullToMysqlNull = false)
-    {
-        $delimiter_esc = preg_quote($delimiter, '/');
-        $enclosure_esc = preg_quote($enclosure, '/');
-
-        $output = array();
-        foreach ($fields as $field) {
-            if ($field === null && $nullToMysqlNull) {
-                $output[] = 'NULL';
-                continue;
-            }
-
-            // Enclose fields containing $delimiter, $enclosure or whitespace
-            if ($encloseAll || preg_match("/(?:${delimiter_esc}|${enclosure_esc}|\s)/", $field)) {
-                $output[] = $enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure;
-            } else {
-                $output[] = $field;
-            }
-        }
-
-        return implode($delimiter, $output);
-    }
-
     /**
      * Cette fonction retourne le fichier CSV contenant uniquement les lignes passées en paramètres.
      *
      * @param array $indiceLignes
      *      Les numéros de ligne à garder.
+     * @param boolean $invalide
+     *      Si invalide = true => rajout d'une colonne d'erreurs
+     * @param array $erreurs
+     *      indique les erreurs de chaque ligne
      * @param string $delimiteur
      * @param string $enclosure
      * @return null|string
      *      Le nouveau fichier CSV.
      */
-    public function getFinalCsv(array $indiceLignes, $delimiteur = ';', $enclosure = '"')
+    public function getFinalCsv(array $indiceLignes, $invalide, array $erreurs= null,$delimiteur = ';', $enclosure = '"')
     {
         $output = null;
         $l = 0;
+
         while ($l < (count(self::getTrueHeader()) - 1)) {
             $output = $output . $enclosure . self::getTrueHeader()[$l] . $enclosure . $delimiteur;
             $l++;
         }
-        $output = $output . $enclosure . self::getTrueHeader()[$l] . $enclosure . "\r\n";
+        $output = $output . $enclosure . self::getTrueHeader()[$l] . $enclosure;
+        if($invalide){
+            $output = $output.$delimiteur.$enclosure."Erreurs".$enclosure."\r\n";
+        }else{
+            $output = $output."\r\n";
+        }
+
         for ($i = 0; $i < count($indiceLignes); $i++) {
             $ligne = ($this->getContent())[array_values($indiceLignes)[$i]];
             $j = 0;
@@ -227,7 +219,12 @@ class Csv
                 $output = $output . $enclosure . array_values($ligne)[$j] . $enclosure . $delimiteur;
                 $j++;
             }
-            $output = $output . $enclosure . array_values($ligne)[$j] . $enclosure . "\r\n";
+            $output = $output . $enclosure . array_values($ligne)[$j] . $enclosure;
+            if($invalide){
+                $output = $output.$delimiteur.$enclosure.$erreurs[array_values($indiceLignes)[$i]].$enclosure."\r\n";
+            }else{
+                $output = $output."\r\n";
+            }
         }
         return $output;
     }
