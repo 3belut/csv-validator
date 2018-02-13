@@ -167,13 +167,13 @@ class HomeController extends Controller
         $csv = unserialize($session->get('csv'));
         $valid = unserialize($session->get('valid'));
 
-        $file = $csv->getFinalCsv($valid);
+        $file = $csv->array2Csv($valid, true);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
         $response->headers->set('Content-Disposition', 'attachment; filename="valide.csv"');
-        $response->setCharset('utf-8');
-        $response->setContent($file);
+        $response->setCharset('ISO-8859-1');
+        $response->setContent(utf8_decode($file));
         $response->setStatusCode(Response::HTTP_OK);
 
         return $response;
@@ -189,13 +189,13 @@ class HomeController extends Controller
         $csv = unserialize($session->get('csv'));
         $invalid = unserialize($session->get('invalid'));
 
-        $file = $csv->getFinalCsv($invalid);
+        $file = $csv->array2Csv($invalid, false);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
         $response->headers->set('Content-Disposition', 'attachment; filename="invalide.csv"');
-        $response->setCharset('utf-8');
-        $response->setContent($file);
+        $response->setCharset('ISO-8859-1');
+        $response->setContent(utf8_decode($file));
         $response->setStatusCode(Response::HTTP_OK);
 
         return $response;

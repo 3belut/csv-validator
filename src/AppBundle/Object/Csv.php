@@ -125,10 +125,13 @@ class Csv
         }
     }
 
-    public function getFinalCsv($content)
+    public function array2Csv($content, $valid)
     {
         $file = '';
-        array_unshift($content, self::$trueHeader);
+        $header = self::$trueHeader;
+        if (!$valid)
+            $header[] = 'erreurs';
+        array_unshift($content, $header);
         foreach ($content as $row) {
             foreach ($row as $field) {
                 $file .= $field . ';';
