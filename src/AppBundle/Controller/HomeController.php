@@ -418,7 +418,6 @@ class HomeController extends Controller
                     array_push($this->indiceGoodLigne, array_values($this->indiceLigne2Check)[$m]);
                 }
             }
-
         }
 
         //******************VERIFICATION DE LA TVA INTRA VIA UN ENVOIE GROUPE A L'API**********\\
@@ -432,7 +431,17 @@ class HomeController extends Controller
             $wrongSirens = array_diff($listSiren, array_keys($resultAPISiren));
             for ($m = 0; $m < count($wrongSirens); $m++) {
                 $key = array_keys($wrongSirens);
-                array_push($this->indiceWrongLigne, $key[$m]);
+                if (!array_key_exists($key[$m], $this->codeErreur)) {
+                    $this->codeErreur[$key[$m]] = "Tva";
+                } else {
+                    $this->codeErreur[$key[$m]] = $this->codeErreur[$key[$m]] . ", Tva";
+                }
+                if (!in_array($key[$m], $this->indiceWrongLigne)) {
+                    if (in_array($key[$m], $this->indiceGoodLigne)) {
+                        unset($this->indiceGoodLigne[$key[$m]]);
+                    }
+                    array_push($this->indiceWrongLigne, $key[$m]);
+                }
             }
             $allKeys = array_keys($this->indiceTVA2Check);
             $this->indiceLigne2Check = array_diff($allKeys, $this->indiceWrongLigne);
@@ -446,6 +455,11 @@ class HomeController extends Controller
                 }
             }
             $this->indiceLigne2Check = array_diff($this->indiceLigne2Check, $this->indiceWrongLigne);
+            for ($m = 0; $m < count($this->indiceLigne2Check); $m++) {
+                if (!in_array(array_keys($this->indiceLigne2Check)[$m], $this->indiceGoodLigne)) {
+                    array_push($this->indiceGoodLigne, array_values($this->indiceLigne2Check)[$m]);
+                }
+            }
         }
 
         if ($siret && $tva) {
