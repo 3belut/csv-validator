@@ -33,23 +33,6 @@ class Csv
     private $size;
     private $header;
     private $content;
-    private $path;
-
-    /**
-     * @return array
-     */
-    public static function getTrueHeader()
-    {
-        return self::$trueHeader;
-    }
-
-    /**
-     * @param array $trueHeader
-     */
-    public static function setTrueHeader($trueHeader)
-    {
-        self::$trueHeader = $trueHeader;
-    }
 
     /**
      * @return mixed
@@ -57,14 +40,6 @@ class Csv
     public function getSize()
     {
         return $this->size;
-    }
-
-    /**
-     * @param mixed $size
-     */
-    public function setSize($size)
-    {
-        $this->size = $size;
     }
 
     /**
@@ -76,43 +51,11 @@ class Csv
     }
 
     /**
-     * @param mixed $header
-     */
-    public function setHeader($header)
-    {
-        $this->header = $header;
-    }
-
-    /**
      * @return mixed
      */
     public function getContent()
     {
         return $this->content;
-    }
-
-    /**
-     * @param mixed $content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param mixed $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
     }
 
     /**
@@ -182,50 +125,21 @@ class Csv
         }
     }
 
-    /**
-     * Cette fonction retourne le fichier CSV contenant uniquement les lignes passées en paramètres.
-     *
-     * @param array $indiceLignes
-     *      Les numéros de ligne à garder.
-     * @param boolean $invalide
-     *      Si invalide = true => rajout d'une colonne d'erreurs
-     * @param array $erreurs
-     *      indique les erreurs de chaque ligne
-     * @param string $delimiteur
-     * @param string $enclosure
-     * @return null|string
-     *      Le nouveau fichier CSV.
-     */
-    public function getFinalCsv(array $indiceLignes, $invalide, array $erreurs= null,$delimiteur = ';', $enclosure = '"')
+    public function getFinalCsv($content)
     {
-        $output = null;
-        $l = 0;
-
-        while ($l < (count(self::getTrueHeader()) - 1)) {
-            $output = $output . $enclosure . self::getTrueHeader()[$l] . $enclosure . $delimiteur;
-            $l++;
-        }
-        $output = $output . $enclosure . self::getTrueHeader()[$l] . $enclosure;
-        if($invalide){
-            $output = $output.$delimiteur.$enclosure."Erreurs".$enclosure."\r\n";
-        }else{
-            $output = $output."\r\n";
-        }
-
-        for ($i = 0; $i < count($indiceLignes); $i++) {
-            $ligne = ($this->getContent())[array_values($indiceLignes)[$i]];
-            $j = 0;
-            while ($j < (count($ligne) - 1)) {
-                $output = $output . $enclosure . array_values($ligne)[$j] . $enclosure . $delimiteur;
-                $j++;
+        $file = '';
+        array_unshift($content, self::$trueHeader);
+        foreach ($content as $row) {
+            foreach ($row as $field) {
+                $file .= $field . ';';
             }
-            $output = $output . $enclosure . array_values($ligne)[$j] . $enclosure;
-            if($invalide){
-                $output = $output.$delimiteur.$enclosure.$erreurs[array_values($indiceLignes)[$i]].$enclosure."\r\n";
-            }else{
-                $output = $output."\r\n";
-            }
+            // On remplace le point-virgule par un retour à la ligne
+            $file = substr($file, 0, -1);
+            $file .= "\r\n";
         }
-        return $output;
+        // On retire le dernier retour à la ligne
+        $file = substr($file, 0, -2);
+
+        return $file;
     }
 }

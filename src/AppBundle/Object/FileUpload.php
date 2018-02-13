@@ -4,11 +4,68 @@ namespace AppBundle\Object;
 
 class FileUpload
 {
+    private $tvaChecked = true;
+    private $raisonSocialeChecked = true;
+    private $adresseChecked = false;
+    private $codePostalChecked = false;
+    private $villeChecked = false;
+    private $emailChecked = true;
+    private $telChecked = false;
+    private $profilUtilisateurChecked = true;
+    private $siretChecked = true;
+    private $accordChecked = true;
+    private $langueChecked = true;
+    private $typeClientChecked = true;
+
     private $file;
 
-    private $tvaChecked = true;
-    private $siretChecked = true;
-    private $emailChecked = true;
+    /**
+     * @return bool
+     */
+    public function isTvaChecked()
+    {
+        return $this->tvaChecked;
+    }
+
+    /**
+     * @param bool $tvaChecked
+     */
+    public function setTvaChecked($tvaChecked)
+    {
+        $this->tvaChecked = $tvaChecked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRaisonSocialeChecked()
+    {
+        return $this->raisonSocialeChecked;
+    }
+
+    /**
+     * @param bool $raisonSocialeChecked
+     */
+    public function setRaisonSocialeChecked($raisonSocialeChecked)
+    {
+        $this->raisonSocialeChecked = $raisonSocialeChecked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdresseChecked()
+    {
+        return $this->adresseChecked;
+    }
+
+    /**
+     * @param bool $adresseChecked
+     */
+    public function setAdresseChecked($adresseChecked)
+    {
+        $this->adresseChecked = $adresseChecked;
+    }
 
     /**
      * @return bool
@@ -45,112 +102,6 @@ class FileUpload
     /**
      * @return bool
      */
-    public function isAdresseChecked()
-    {
-        return $this->adresseChecked;
-    }
-
-    /**
-     * @param bool $adresseChecked
-     */
-    public function setAdresseChecked($adresseChecked)
-    {
-        $this->adresseChecked = $adresseChecked;
-    }
-
-    private $langueChecked = true;
-    private $clientChecked = true;
-    private $accordChecked = true;
-    private $telChecked = false;
-    private $codePostalChecked = false;
-    private $villeChecked = false;
-    private $adresseChecked = false;
-    private $raisonSocialeChecked = true;
-    private $profilUtilisateurChecked = true;
-
-    /**
-     * @return bool
-     */
-    public function isProfilUtilisateurChecked()
-    {
-        return $this->profilUtilisateurChecked;
-    }
-
-    /**
-     * @param bool $profilUtilisateurChecked
-     */
-    public function setProfilUtilisateurChecked($profilUtilisateurChecked)
-    {
-        $this->profilUtilisateurChecked = $profilUtilisateurChecked;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAccordChecked()
-    {
-        return $this->accordChecked;
-    }
-
-    /**
-     * @param bool $accordChecked
-     */
-    public function setAccordChecked($accordChecked)
-    {
-        $this->accordChecked = $accordChecked;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    /**
-     * @param mixed $file
-     */
-    public function setFile($file)
-    {
-        $this->file = $file;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTvaChecked()
-    {
-        return $this->tvaChecked;
-    }
-
-    /**
-     * @param bool $tvaChecked
-     */
-    public function setTvaChecked($tvaChecked)
-    {
-        $this->tvaChecked = $tvaChecked;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSiretChecked()
-    {
-        return $this->siretChecked;
-    }
-
-    /**
-     * @param bool $siretChecked
-     */
-    public function setSiretChecked($siretChecked)
-    {
-        $this->siretChecked = $siretChecked;
-    }
-
-    /**
-     * @return bool
-     */
     public function isEmailChecked()
     {
         return $this->emailChecked;
@@ -162,38 +113,6 @@ class FileUpload
     public function setEmailChecked($emailChecked)
     {
         $this->emailChecked = $emailChecked;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isLangueChecked()
-    {
-        return $this->langueChecked;
-    }
-
-    /**
-     * @param bool $langueChecked
-     */
-    public function setLangueChecked($langueChecked)
-    {
-        $this->langueChecked = $langueChecked;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isClientChecked()
-    {
-        return $this->clientChecked;
-    }
-
-    /**
-     * @param bool $clientChecked
-     */
-    public function setClientChecked($clientChecked)
-    {
-        $this->clientChecked = $clientChecked;
     }
 
     /**
@@ -215,16 +134,96 @@ class FileUpload
     /**
      * @return bool
      */
-    public function isRaisonSocialeChecked()
+    public function isProfilUtilisateurChecked()
     {
-        return $this->raisonSocialeChecked;
+        return $this->profilUtilisateurChecked;
     }
 
     /**
-     * @param bool $raisonSocialeChecked
+     * @param bool $profilUtilisateurChecked
      */
-    public function setRaisonSocialeChecked($raisonSocialeChecked)
+    public function setProfilUtilisateurChecked($profilUtilisateurChecked)
     {
-        $this->raisonSocialeChecked = $raisonSocialeChecked;
+        $this->profilUtilisateurChecked = $profilUtilisateurChecked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSiretChecked()
+    {
+        return $this->siretChecked;
+    }
+
+    /**
+     * @param bool $siretChecked
+     */
+    public function setSiretChecked($siretChecked)
+    {
+        $this->siretChecked = $siretChecked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAccordChecked()
+    {
+        return $this->accordChecked;
+    }
+
+    /**
+     * @param bool $accordChecked
+     */
+    public function setAccordChecked($accordChecked)
+    {
+        $this->accordChecked = $accordChecked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLangueChecked()
+    {
+        return $this->langueChecked;
+    }
+
+    /**
+     * @param bool $langueChecked
+     */
+    public function setLangueChecked($langueChecked)
+    {
+        $this->langueChecked = $langueChecked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTypeClientChecked()
+    {
+        return $this->typeClientChecked;
+    }
+
+    /**
+     * @param bool $typeClientChecked
+     */
+    public function setTypeClientChecked($typeClientChecked)
+    {
+        $this->typeClientChecked = $typeClientChecked;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param mixed $file
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
     }
 }
