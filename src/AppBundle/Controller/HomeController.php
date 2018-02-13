@@ -105,7 +105,7 @@ class HomeController extends Controller
             $session->set('tests', serialize($tests));
 
             // On retourne la page contenant la barre de progression
-            return $this->render('running.html.twig');
+            return $this->redirectToRoute('running');
         }
 
         // On retourne le formulaire

@@ -79,7 +79,7 @@ class CsvValidation
         if ($tests['tva']) {
             $sirens = array();
             foreach ($csv as $row) {
-                $siren = substr($row['tvaintra'], 0, -9);
+                $siren = substr($row['tva_intra'], 0, -9);
                 $sirens[] = $siren;
             }
             $this->entreprisesBySiren = $this->sirenValidation->fetchDataBySiren($sirens);
@@ -124,7 +124,7 @@ class CsvValidation
         $erreurs = '';
 
         if ($tests['tva']) {
-            if (!$this->isTvaValid($row['tvaintra']))
+            if (!$this->isTvaValid($row['tva_intra']))
                 $erreurs .= 'siret - ';
         }
 

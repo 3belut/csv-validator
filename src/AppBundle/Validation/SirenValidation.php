@@ -48,16 +48,19 @@ class SirenValidation
             $result = json_decode($json, true);
 
             // On remplit notre liste des entreprises avec les données qui nous intéressent
-            foreach ($result['records'] as $record) {
-                $siret = $record['fields']['siret'];
-                $entreprise = array(
-                    'raison_sociale' => array_key_exists('nomen_long', $record['fields']) ? $record['fields']['nomen_long'] : '',
-                    'code_postal' => array_key_exists('codpos', $record['fields']) ? $record['fields']['codpos'] : '',
-                    'ville' => array_key_exists('libcom', $record['fields']) ? $record['fields']['libcom'] : '',
-                    'adresse' => array_key_exists('l4_normalisee', $record['fields']) ? $record['fields']['l4_normalisee'] : ''
-                );
+            $entreprises = array();
+            if (array_key_exists('records', $result)) {
+                foreach ($result['records'] as $record) {
+                    $siret = $record['fields']['siret'];
+                    $entreprise = array(
+                        'raison_sociale' => array_key_exists('nomen_long', $record['fields']) ? $record['fields']['nomen_long'] : '',
+                        'code_postal' => array_key_exists('codpos', $record['fields']) ? $record['fields']['codpos'] : '',
+                        'ville' => array_key_exists('libcom', $record['fields']) ? $record['fields']['libcom'] : '',
+                        'adresse' => array_key_exists('l4_normalisee', $record['fields']) ? $record['fields']['l4_normalisee'] : ''
+                    );
 
-                $entreprises[$siret] = $entreprise;
+                    $entreprises[$siret] = $entreprise;
+                }
             }
         }
 
@@ -103,16 +106,19 @@ class SirenValidation
             $result = json_decode($json, true);
 
             // On remplit notre liste des entreprises avec les données qui nous intéressent
-            foreach ($result['records'] as $record) {
-                $siren = $record['fields']['siren'];
-                $entreprise = array(
-                    'raison_sociale' => array_key_exists('nomen_long', $record['fields']) ? $record['fields']['nomen_long'] : '',
-                    'code_postal' => array_key_exists('codpos', $record['fields']) ? $record['fields']['codpos'] : '',
-                    'ville' => array_key_exists('libcom', $record['fields']) ? $record['fields']['libcom'] : '',
-                    'adresse' => array_key_exists('l4_normalisee', $record['fields']) ? $record['fields']['l4_normalisee'] : ''
-                );
+            $entreprises = array();
+            if (array_key_exists('records', $result)) {
+                foreach ($result['records'] as $record) {
+                    $siren = $record['fields']['siren'];
+                    $entreprise = array(
+                        'raison_sociale' => array_key_exists('nomen_long', $record['fields']) ? $record['fields']['nomen_long'] : '',
+                        'code_postal' => array_key_exists('codpos', $record['fields']) ? $record['fields']['codpos'] : '',
+                        'ville' => array_key_exists('libcom', $record['fields']) ? $record['fields']['libcom'] : '',
+                        'adresse' => array_key_exists('l4_normalisee', $record['fields']) ? $record['fields']['l4_normalisee'] : ''
+                    );
 
-                $entreprises[$siren] = $entreprise;
+                    $entreprises[$siren] = $entreprise;
+                }
             }
         }
 
