@@ -169,7 +169,7 @@ class HomeController extends Controller
                         if (strcmp(($csv->getContent())[$i]['accord'], 'O') == 0) {
                             $needEmail = true;
                         }
-                        if (!in_array($i, $this->indiceGoodLigne)&&$this->trueLine) {
+                        if (!in_array($i, $this->indiceGoodLigne) && $this->trueLine) {
                             array_push($this->indiceGoodLigne, $i);
                         }
                     } else {
@@ -190,7 +190,7 @@ class HomeController extends Controller
                 //********************VERIF TYPE CLIENT********************************************\\
                 if ($client) {
                     if (strcmp(($csv->getContent())[$i]['type_client'], 'b2b') == 0 || strcmp(($csv->getContent())[$i]['type_client'], 'b2c') == 0) {
-                        if (!in_array($i, $this->indiceGoodLigne)&& $this->trueLine) {
+                        if (!in_array($i, $this->indiceGoodLigne) && $this->trueLine) {
                             array_push($this->indiceGoodLigne, $i);
                         }
                     } else {
@@ -214,7 +214,7 @@ class HomeController extends Controller
                         || strcmp(($csv->getContent())[$i]['profil'], "4") == 0
                         || strcmp(($csv->getContent())[$i]['profil'], "5") == 0
                         || strcmp(($csv->getContent())[$i]['profil'], "6") == 0) {
-                        if (!in_array($i, $this->indiceGoodLigne)&& $this->trueLine) {
+                        if (!in_array($i, $this->indiceGoodLigne) && $this->trueLine) {
                             array_push($this->indiceGoodLigne, $i);
                         }
                     } else {
@@ -237,7 +237,7 @@ class HomeController extends Controller
                     if (preg_match("#^((\+33)|0)[1-9]([-\/. ]?[0-9]{2}){4}( +)?$#", ($csv->getContent())[$i]['telephone']) == true
                         || strpos(($csv->getContent())[$i]['telephone'], '_') !== false
                         || strcmp(($csv->getContent())[$i]['telephone'], "") == 0) {
-                        if (!in_array($i, $this->indiceGoodLigne)&& $this->trueLine) {
+                        if (!in_array($i, $this->indiceGoodLigne) && $this->trueLine) {
                             array_push($this->indiceGoodLigne, $i);
                         }
                     } else {
@@ -266,7 +266,7 @@ class HomeController extends Controller
                         $j++;
                     }
                     if ($find) {
-                        if (!in_array($i, $this->indiceGoodLigne)&&$this->trueLine) {
+                        if (!in_array($i, $this->indiceGoodLigne) && $this->trueLine) {
                             array_push($this->indiceGoodLigne, $i);
                         }
                     } else {
@@ -303,7 +303,7 @@ class HomeController extends Controller
                             $this->trueLine = false;
                         } else {
                             if ($mailValidation->isValid(($csv->getContent())[$i]['email'])) {
-                                if (!in_array($i, $this->indiceGoodLigne)&& $this->trueLine) {
+                                if (!in_array($i, $this->indiceGoodLigne) && $this->trueLine) {
                                     array_push($this->indiceGoodLigne, $i);
                                 }
                             } else {
@@ -323,7 +323,7 @@ class HomeController extends Controller
                         }
                     } else {
                         if ($mailValidation->isValid(($csv->getContent())[$i]['email'])) {
-                            if (!in_array($i, $this->indiceGoodLigne)&& $this->trueLine) {
+                            if (!in_array($i, $this->indiceGoodLigne) && $this->trueLine) {
                                 array_push($this->indiceGoodLigne, $i);
                             }
                         } else {
@@ -399,10 +399,26 @@ class HomeController extends Controller
 
             for ($m = 0; $m < count($wrongSirets); $m++) {
                 $key = array_keys($wrongSirets);
-                array_push($this->indiceWrongLigne, "$key[$m]");
+                if (!array_key_exists($key[$m], $this->codeErreur)) {
+                    $this->codeErreur[$key[$m]] = "Tva";
+                } else {
+                    $this->codeErreur[$key[$m]] = $this->codeErreur[$key[$m]] . ", Tva";
+                }
+                if (!in_array($key[$m], $this->indiceWrongLigne)) {
+                    if (in_array($key[$m], $this->indiceGoodLigne)) {
+                        unset($this->indiceGoodLigne[$key[$m]]);
+                    }
+                    array_push($this->indiceWrongLigne, $key[$m]);
+                }
             }
             $allKeys = array_keys($this->indiceSiret2Check);
             $this->indiceLigne2Check = array_diff($allKeys, $this->indiceWrongLigne);
+            for ($m = 0; $m < count($this->indiceLigne2Check); $m++) {
+                if (!in_array(array_keys($this->indiceLigne2Check)[$m], $this->indiceGoodLigne)) {
+                    array_push($this->indiceGoodLigne, array_values($this->indiceLigne2Check)[$m]);
+                }
+            }
+
         }
 
         //******************VERIFICATION DE LA TVA INTRA VIA UN ENVOIE GROUPE A L'API**********\\
