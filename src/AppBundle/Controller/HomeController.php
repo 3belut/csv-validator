@@ -451,7 +451,17 @@ class HomeController extends Controller
                 $calculatedTVA = "FR" . $calculatedkey . $sirenAPI;
                 $tvaCsv = ($csv->getContent())[array_values($this->indiceLigne2Check)[$m]]['tva_intra'];
                 if (strcmp($tvaCsv, $calculatedTVA) != 0) {
-                    array_push($this->indiceWrongLigne, array_values($this->indiceLigne2Check)[$m]);
+                    if (!array_key_exists($key[$m], $this->codeErreur)) {
+                        $this->codeErreur[$key[$m]] = "Tva";
+                    } else {
+                        $this->codeErreur[$key[$m]] = $this->codeErreur[$key[$m]] . ", Tva";
+                    }
+                    if (!in_array($key[$m], $this->indiceWrongLigne)) {
+                        if (in_array($key[$m], $this->indiceGoodLigne)) {
+                            unset($this->indiceGoodLigne[$key[$m]]);
+                        }
+                        array_push($this->indiceWrongLigne, array_values($this->indiceLigne2Check)[$m]);
+                    }
                 }
             }
             $this->indiceLigne2Check = array_diff($this->indiceLigne2Check, $this->indiceWrongLigne);
@@ -462,7 +472,7 @@ class HomeController extends Controller
             }
         }
 
-        if ($siret && $tva) {
+        if ($siret && $tva) { // SI TVA ET SIRET COCHES
             for ($m = 0; $m < count($this->indiceLigne2Check); $m++) {
                 $siretAPI = array_diff($listSiret, $wrongSirets) [array_values($this->indiceLigne2Check)[$m]];
                 $sirenAPI = substr($siretAPI, 0, -5);
