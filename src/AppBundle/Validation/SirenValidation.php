@@ -48,7 +48,6 @@ class SirenValidation
             $result = json_decode($json, true);
 
             // On remplit notre liste des entreprises avec les données qui nous intéressent
-            $entreprises = array();
             if (array_key_exists('records', $result)) {
                 foreach ($result['records'] as $record) {
                     $siret = $record['fields']['siret'];
@@ -106,7 +105,6 @@ class SirenValidation
             $result = json_decode($json, true);
 
             // On remplit notre liste des entreprises avec les données qui nous intéressent
-            $entreprises = array();
             if (array_key_exists('records', $result)) {
                 foreach ($result['records'] as $record) {
                     $siren = $record['fields']['siren'];

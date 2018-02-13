@@ -47,7 +47,7 @@ class CsvValidation
     public function checkCsv($csv, $tests)
     {
         // On récupère les données des entreprises si nécessaire
-        if ($tests['siret'] || $tests['raisonSociale'] || $tests['adresse'] || $tests['code_postal'] || $tests['ville']) {
+        if ($tests['siret'] || $tests['raisonSociale'] || $tests['adresse'] || $tests['codePostal'] || $tests['ville']) {
             $sirets = array();
             foreach ($csv as $row) {
                 $sirets[] = $row['siret'];
@@ -170,8 +170,8 @@ class CsvValidation
         }
 
         // Si les deux cases TVA et Siret sont cochées et que les deux champs sont remplis, on vérifie la correspondance
-        if ($tests['tva'] && $tests['siret'] && $row['tva_intra'] !== '' && $row['siret'] != '') {
-            if ($this->tvaSiretMatch($row['tva_intra'], $row['siret']))
+        if ($tests['tva'] && $tests['siret'] && $row['tva_intra'] !== '' && $row['siret'] !== '') {
+            if (!$this->tvaSiretMatch($row['tva_intra'], $row['siret']))
                 $erreurs .= 'correspondance tva/siret';
         }
 
@@ -428,7 +428,7 @@ class CsvValidation
         $tvaKey = (12 + 3 * ($siren % 97)) % 97;
         $tva = $tvaKey . $siren;
 
-        if (strlen($tva) == 10)
+        if (strlen($tva) === 10)
             $tva = '0' . $tva;
 
         $tva = 'FR' . $tva;
@@ -442,10 +442,8 @@ class CsvValidation
      */
     private function tva2Siren($tva)
     {
-        $siren = substr($tva, 0, -9);
-        if ($siren)
-            return $siren;
-        else
-            return '';
+        $siren = substr($tva, -9);
+
+        return $siren ?: '';
     }
 }
