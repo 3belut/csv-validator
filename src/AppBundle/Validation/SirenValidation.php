@@ -3,9 +3,9 @@
 namespace AppBundle\Validation;
 
 /**
- * Cette classe permet la validation des données des entreprises (SIREN, SIRET, raison sociale, adresse, etc.).
+ * Ce service permet la validation des données des entreprises (SIREN, SIRET, raison sociale, adresse, etc.).
  *
- * Elle fait appel à la base Sirene OpenDataSoft : https://data.opendatasoft.com/explore/dataset/sirene@public/
+ * Il fait appel à la base Sirene OpenDataSoft : https://data.opendatasoft.com/explore/dataset/sirene@public/
  */
 class SirenValidation
 {

@@ -3,7 +3,7 @@
 namespace AppBundle\Validation;
 
 /**
- * Cette classe permet la validation des champs du CSV
+ * Ce service permet la validation des champs du CSV
  */
 class CsvValidation
 {
