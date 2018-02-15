@@ -7,6 +7,16 @@
 {% block title %}Qweeby{% endblock %}
 {% block head %} <meta charset="utf-8"/>{% endblock %}
 
+{% block alerte %}
+    {% if goodline == false %}
+        <script>
+            function alerte() {
+                alert("Votre fichier csv ne contient pas les bonnes colonnes")
+            }
+        </script>
+    {% endif %}
+{% endblock %}
+
 {% block body %}
     {{ parent() }}
     <div class="header">
