@@ -22,11 +22,13 @@ class CsvValidation
     // Les services dont on sert
     private $mailValidation;
     private $sirenValidation;
+    private $vies;
 
-    public function __construct(MailValidation $mailValidation, SirenValidation $sirenValidation)
+    public function __construct(MailValidation $mailValidation, SirenValidation $sirenValidation, Vies $vies)
     {
         $this->mailValidation = $mailValidation;
         $this->sirenValidation = $sirenValidation;
+        $this->vies = $vies;
     }
 
     /**
@@ -226,10 +228,13 @@ class CsvValidation
             // On tente de recalculer le numéro de TVA à partir du SIREN
             if ($this->siren2Tva($siren) === $tva)
                 return true;
-            else
-                return false;
-        } else
-            return false;
+        }
+
+        // A ce stade, le numéro de TVA n'a pas été trouvé dans la base SIREN, on tente un appel à VIES
+        if ($this->vies->isValid($tva))
+            return true;
+
+        return false;
     }
 
     /**
