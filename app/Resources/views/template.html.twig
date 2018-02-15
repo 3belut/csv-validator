@@ -6,6 +6,15 @@
 {% endblock %}
 {% block title %}Qweeby{% endblock %}
 {% block head %} <meta charset="utf-8"/>{% endblock %}
+{% block alerte %}
+    {% if goodline == false %}
+        <script>
+            function alerte() {
+                alert("Votre fichier csv ne contient pas les bonnes colonnes")
+            }
+        </script>
+    {% endif %}
+{% endblock %}
 
 {% block body %}
     {{ parent() }}
@@ -24,7 +33,7 @@
             <center>
                 {{ form_widget(form.file, {'attr': {'class': 'input-file', 'name':'csv'}}) }}
                 <div class="csv">
-                    <label class="label-file" for="{{ form.file.vars.id }}" id="file-drag"
+                    <label class="label-file" for="{{ form.file.vars.id }}" id="file-drag" onclick="changer()"
                            title="Ouvrir l'explorateur de fichier et sélectionner un fichier CSV.">Ouvrir...</label>
                 </div>
                 <label title="Cliquez ici pour télecharger un fichier CSV modèle." class="topito">Besoin d'aide?</label>
@@ -128,5 +137,22 @@
                 document.getElementById('checkMarkCoord').style.display='none';
             }
         }</script>
+
+
+    <script type="text/javascript">
+        function changer() {
+            document.getElementById('file-drag').innerHTML = 'fichier remis';
+        }
+        function verif(file) {
+            var regex = new RegExp("\\w+\\.csv$", "i");
+            if (!regex.test(file)) {
+                alert("Ce fichier n'est pas au format CSV");
+                resetFileInput();
+            }
+        }
+        function alerte() {
+            alert("Votre fichier csv ne contient pas les bonnes colonnes")
+        }
+    </script>
 
 {% endblock %}

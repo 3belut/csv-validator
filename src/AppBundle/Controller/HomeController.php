@@ -88,11 +88,16 @@ class HomeController extends Controller
             ->getForm();
 
         $form->handleRequest($request);
-
+        $goodFile = true;
         if ($form->isSubmitted()) {
             // On charge le fichier CSV dans la classe Csv
             $csv = new Csv();
-            $csv->lire_csv($fileUpload->getFile()->getPathname());
+            if ($csv->verif_header($fileUpload->getFile()->getPathname())) {
+                $csv->lire_csv($fileUpload->getFile()->getPathname());
+            } else {
+                $goodFile = false;
+            }
+
 
             // On stocke le CSV et les tests à effectuer dans la session
             $session->set('csv', serialize($csv));
@@ -109,13 +114,16 @@ class HomeController extends Controller
                 'accord' => $fileUpload->isAccordChecked(),
                 'langue' => $fileUpload->isLangueChecked(),
                 'typeClient' => $fileUpload->isTypeClientChecked(),
-                'replaceTva'=> $fileUpload->isReplaceTva(),
+                'replaceTva' => $fileUpload->isReplaceTva(),
                 'replaceCoordonnees' => $fileUpload->isReplaceCoordonnees()
             );
             $session->set('tests', serialize($tests));
 
             // On retourne la page contenant la barre de progression
-            return $this->render('running.html.twig');
+            if($goodFile)
+                return $this->render('running.html.twig');
+            else
+                return $this->render('template.html.twig', array('form' => $form->createView(), 'goodFile' => $goodFile));
         }
 
         // On retourne le formulaire
@@ -133,6 +141,7 @@ class HomeController extends Controller
         $tests = unserialize($session->get('tests'));
 
         $result = $csvValidation->checkCsv($csv->getContent(), $tests);
+
 
         $session->set('valid', serialize($result['valid']));
         $session->set('invalid', serialize($result['invalid']));
@@ -200,6 +209,7 @@ class HomeController extends Controller
         $invalid = unserialize($session->get('invalid'));
 
         $file = $csv->array2Csv($invalid, false);
+
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');

@@ -110,22 +110,36 @@ class Csv
         }
     }
 
-    public function verif_header()
+    public static function verif_header($path)
     {
-        if (count(Csv::$trueHeader) == count($this->header)) {
-            /*for ($i=0; $i< count($this->trueHeader); $i++) {
-                similar_text($this->trueHeader[$i], $this->header[$i], $percent);
-                if ($percent < 60){
-                    return false;
-                }
-            }*/
-            return true;
-        } else {
+        if ($handle = fopen($path, "r")) {
+            // On convertit le fichier en UTF-8
+            $fileContent = file_get_contents($path);
+            if (mb_check_encoding($fileContent, 'UTF-8'))
+                file_put_contents($path, $fileContent);
+            else
+                file_put_contents($path, utf8_encode($fileContent));
+
+            $header = fgetcsv($handle, 0, ";");
+            if (count(Csv::$trueHeader) == count($header)) {
+                /*for ($i=0; $i< count($this->trueHeader); $i++) {
+                    similar_text($this->trueHeader[$i], $this->header[$i], $percent);
+                    if ($percent < 60){
+                        return false;
+                    }
+                }*/
+                fclose($handle);
+                return true;
+            } else {
+                fclose($handle);
+                return false;
+            }
+        }else{
             return false;
         }
     }
 
-    public function array2Csv($content, $valid)
+    public static function array2Csv($content, $valid)
     {
         $file = '';
         $header = self::$trueHeader;
