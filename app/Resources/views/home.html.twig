@@ -10,9 +10,9 @@
 {% block alerte %}
     {% if goodline == false %}
         <script>
-            function alerte() {
+            window.onload = function () {
                 alert("Votre fichier csv ne contient pas les bonnes colonnes")
-            }
+            };
         </script>
     {% endif %}
 {% endblock %}
