@@ -123,7 +123,7 @@ class HomeController extends Controller
             if($goodFile)
                 return $this->render('running.html.twig');
             else
-                return $this->render('template.html.twig', array('form' => $form->createView(), 'goodFile' => $goodFile));
+                return $this->render('home.html.twig', array('form' => $form->createView(), 'goodFile' => $goodFile));
         }
 
         // On retourne le formulaire
