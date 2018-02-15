@@ -109,7 +109,7 @@ class HomeController extends Controller
                 'accord' => $fileUpload->isAccordChecked(),
                 'langue' => $fileUpload->isLangueChecked(),
                 'typeClient' => $fileUpload->isTypeClientChecked(),
-                'replaceTva'=> $fileUpload->isReplaceTva(),
+                'replaceTva' => $fileUpload->isReplaceTva(),
                 'replaceCoordonnees' => $fileUpload->isReplaceCoordonnees()
             );
             $session->set('tests', serialize($tests));
