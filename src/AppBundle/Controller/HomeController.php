@@ -119,7 +119,7 @@ class HomeController extends Controller
         }
 
         // On retourne le formulaire
-        return $this->render('template.html.twig', array('form' => $form->createView()));
+        return $this->render('home.html.twig', array('form' => $form->createView()));
     }
 
     /**
