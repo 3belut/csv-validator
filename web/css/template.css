@@ -1,0 +1,217 @@
+.label-file {
+    cursor: pointer;
+    background-color: white;
+    color: #e7652a;
+    font-size: 2em;
+
+    float: none;
+
+    display: block;
+
+    position:relative;
+    clear: both;
+    width: 70%;
+    padding: 5rem 1.5rem;
+    text-align: center;
+    border-radius: 7px;
+    border: 3px solid #e1e1e1;
+
+}
+.topito
+{
+    color: #44589a;
+}
+
+.topito:hover
+{
+    color: #ff6928;
+}
+.label-file:hover {
+    border-color: #e76227;
+}
+
+.csv{
+    padding:0;
+    width: 100%;
+    border:none;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+
+}
+
+.header
+{
+    padding:0;
+}
+
+.corps
+{
+    background-color: #f0f0f0;
+    border-style: solid;
+    border-color: #e1e0dd;
+    border-top-width: 5px;
+    border-bottom-width: 0px;
+    border-right-width: 0px;
+    border-left-width: 0px;
+}
+
+label
+{
+    color: #e7652a;
+}
+
+.start-button {
+    background: #f07818;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 35px;
+    margin-bottom: 6px;
+    padding: 5px 20px 5px 25px;
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+.start-button:hover{
+    background-color: #e7652a; /* Orange */
+    color: #ffffff;
+}
+
+body{
+    margin:0;
+    background-color: #ffffff;
+    border-style: solid;
+    border-color:#e7652a;
+    border-width: 0px;
+
+}
+.input-file {
+    display: none;
+}
+
+.envoyer_upload{
+    color:black;
+    background-color: white;
+
+    font-size: 2em;
+
+    border-radius: 8px;
+    border-color: #e7652a;
+    border-style: solid;
+
+    background-color: #ffffff;
+    color: #e7652a;
+
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+.envoyer_upload:hover {
+    background-color: #e7652a; /* Orange */
+    color: #ffffff;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+.grey{
+    width: 70%;
+    padding: 2rem 1.5rem;
+    border-radius: 7px;
+    border: 3px solid #e1e1e1;
+    background-color: #ffffff;
+}
+
+h1{
+    display: inline-block;
+    font-size:1.8em;
+    color: #e7652a;
+    text-align: left;
+    margin:0;
+    margin-left:15%;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+
+
+/* CHECKBOX */
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #e7652a;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+

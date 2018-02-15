@@ -1,31 +1,28 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="{{ asset('css/loading_spinner.css')}}">
 {% endblock %}
-
 {% block body %}
-    <div class="w3-container">
-        <h2>Dynamic Progress Bar with Labels</h2>
-        <p>Centered label:</p>
-        <div class="w3-light-grey">
-            <div id="progressBar" class="w3-container w3-green w3-center" style="width:20%">1%</div>
-        </div>
-        <span id="time">Temps restant estimé : calcul en cours</span>
+    <div class="sk-circle">
+        <div class="sk-circle1 sk-child"></div>
+        <div class="sk-circle2 sk-child"></div>
+        <div class="sk-circle3 sk-child"></div>
+        <div class="sk-circle4 sk-child"></div>
+        <div class="sk-circle5 sk-child"></div>
+        <div class="sk-circle6 sk-child"></div>
+        <div class="sk-circle7 sk-child"></div>
+        <div class="sk-circle8 sk-child"></div>
+        <div class="sk-circle9 sk-child"></div>
+        <div class="sk-circle10 sk-child"></div>
+        <div class="sk-circle11 sk-child"></div>
+        <div class="sk-circle12 sk-child"></div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     <script>
         window.onload = function () {
-            var elem = document.getElementById("progressBar");
-            var progress = 1;
-            var interval = 500;
-            var spentTime = 0;
-            var remainingTime = 0;
-            var m;
-            var s;
-
             $.ajax({
                 url: 'running',
                 dataType: 'json',
@@ -34,29 +31,6 @@
                 }
             });
 
-            setInterval(updateProgress, interval);
-
-            function updateProgress() {
-                $.ajax({
-                    url: 'progress',
-                    dataType: 'json',
-                    success: function (result) {
-                        progress = result;
-                        spentTime += interval / 1000;
-                        remainingTime = spentTime / progress * 100 - spentTime;
-                        m = Math.floor(remainingTime / 60);
-                        s = Math.round(remainingTime - m * 60);
-
-                        elem.style.width = progress + '%';
-                        elem.innerHTML = progress + '%';
-
-                        document.getElementById("time").innerHTML = 'Temps restant estimé : ' + m + 'm' + s + 's';
-                    }
-                });
-                if (progress === 100) {
-                    spentTime = 0;
-                }
-            }
         }
     </script>
 {% endblock %}

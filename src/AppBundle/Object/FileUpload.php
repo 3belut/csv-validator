@@ -16,6 +16,40 @@ class FileUpload
     private $accordChecked = true;
     private $langueChecked = true;
     private $typeClientChecked = true;
+    private $replaceTva = false;
+    private $replaceCoordonnees = false;
+
+    /**
+     * @return bool
+     */
+    public function isReplaceTva()
+    {
+        return $this->replaceTva;
+    }
+
+    /**
+     * @param bool $replaceTva
+     */
+    public function setReplaceTva($replaceTva)
+    {
+        $this->replaceTva = $replaceTva;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReplaceCoordonnees()
+    {
+        return $this->replaceCoordonnees;
+    }
+
+    /**
+     * @param bool $replaceCoordonnees
+     */
+    public function setReplaceCoordonnees($replaceCoordonnees)
+    {
+        $this->replaceCoordonnees = $replaceCoordonnees;
+    }
 
     private $file;
 

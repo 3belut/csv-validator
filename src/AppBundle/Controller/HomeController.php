@@ -75,6 +75,14 @@ class HomeController extends Controller
                 'label' => 'Type client',
                 'required' => false
             ))
+            ->add('replaceTva', CheckboxType::class, array(
+                'label' => 'remplacer Tva',
+                'required' => false
+            ))
+            ->add('replaceCoordonnees', CheckboxType::class, array(
+                'label' => 'Remplacer raison sociale, code postal, ville et adresse',
+                'required' => false
+            ))
             ->add('file', FileType::class)
             ->add('send', SubmitType::class)
             ->getForm();
@@ -100,16 +108,18 @@ class HomeController extends Controller
                 'siret' => $fileUpload->isSiretChecked(),
                 'accord' => $fileUpload->isAccordChecked(),
                 'langue' => $fileUpload->isLangueChecked(),
-                'typeClient' => $fileUpload->isTypeClientChecked()
+                'typeClient' => $fileUpload->isTypeClientChecked(),
+                'replaceTva'=> $fileUpload->isReplaceTva(),
+                'replaceCoordonnees' => $fileUpload->isReplaceCoordonnees()
             );
             $session->set('tests', serialize($tests));
 
             // On retourne la page contenant la barre de progression
-            return $this->redirectToRoute('running');
+            return $this->render('running.html.twig');
         }
 
         // On retourne le formulaire
-        return $this->render('home.html.twig', array('form' => $form->createView()));
+        return $this->render('template.html.twig', array('form' => $form->createView()));
     }
 
     /**

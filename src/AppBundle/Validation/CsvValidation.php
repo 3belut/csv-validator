@@ -98,33 +98,68 @@ class CsvValidation
      * @return string
      *      Une chaine vide s'il n'y a pas d'erreur, ou une description des erreurs trouvées.
      */
-    private function checkRow($row, $tests)
+    private function checkRow(&$row, $tests)
     {
         $erreurs = '';
+        $siretValide = false;
+        $sirenValide = false;
+
+        if ($tests['siret']) {
+            if ($this->isSiretValid($row['siret'])) {
+                $siretValide = true;
+                if ($tests['replaceTva'] && $row['tva_intra'] === '') {
+                    $siren = $this->siret2Siren($row['siret']);
+                    $calculatedTva = $this->siren2Tva($siren);
+                    $row['tva_intra'] = $calculatedTva;
+                }
+            } else
+                $erreurs .= 'siret - ';
+        }
 
         if ($tests['tva']) {
-            if (!$this->isTvaValid($row['tva_intra']))
+            if ($this->isTvaValid($row['tva_intra'])) {
+                $sirenValide = true;
+            } else
                 $erreurs .= 'tva - ';
         }
 
         if ($tests['raisonSociale']) {
-            if (!$this->isRaisonSocialeValid($row['raison_sociale'], $this->tva2Siren($row['tva_intra']), $row['siret']))
-                $erreurs .= 'raison sociale - ';
+            if (!$this->isRaisonSocialeValid($row['raison_sociale'], $this->tva2Siren($row['tva_intra']), $row['siret'])) {
+                if ($tests['replaceCoordonnees'] && $siretValide) {
+                    $row['raison_sociale'] = $this->entreprisesBySiret[$row['siret']]['raison_sociale'];
+                } else if ($tests['replaceCoordonnees'] && $sirenValide) {
+                    $siren = $this->tva2Siren($row['tva_intra']);
+                    $row['raison_sociale'] = $this->entreprisesBySiren[$siren]['raison_sociale'];
+                } else
+                    $erreurs .= 'raison sociale - ';
+            }
         }
 
         if ($tests['adresse']) {
-            if (!$this->isAdresseValid($row['adresse'], $row['siret']))
-                $erreurs .= 'adresse - ';
+            if (!$this->isAdresseValid($row['adresse'], $row['siret'])) {
+                if ($tests['replaceCoordonnees'] && $siretValide)
+                    $row['adresse'] = $this->entreprisesBySiret[$row['siret']]['adresse'];
+                else
+                    $erreurs .= 'adresse - ';
+            }
         }
 
         if ($tests['codePostal']) {
-            if (!$this->isCodePostalValid($row['code_postal'], $row['siret']))
-                $erreurs .= 'code postal - ';
+            if (!$this->isCodePostalValid($row['code_postal'], $row['siret'])) {
+                if ($tests['replaceCoordonnees'] && $siretValide)
+                    $row['code_postal'] = $this->entreprisesBySiret[$row['siret']]['code_postal'];
+                else
+                    $erreurs .= 'code postal - ';
+            }
         }
 
         if ($tests['ville']) {
-            if (!$this->isVilleValid($row['ville'], $row['siret']))
-                $erreurs .= 'ville - ';
+            if (!$this->isVilleValid($row['ville'], $row['siret'])) {
+                if ($tests['replaceCoordonnees'] && $siretValide)
+                    $row['ville'] = $this->entreprisesBySiret[$row['siret']]['ville'];
+                else
+                    $erreurs .= 'ville - ';
+            }
         }
 
         if ($tests['email']) {
@@ -140,11 +175,6 @@ class CsvValidation
         if ($tests['profilUtilisateur']) {
             if (!$this->isProfilUtilisateurValid($row['profil']))
                 $erreurs .= 'profil utilisateur - ';
-        }
-
-        if ($tests['siret']) {
-            if (!$this->isSiretValid($row['siret']))
-                $erreurs .= 'siret - ';
         }
 
         if ($tests['accord']) {
@@ -188,7 +218,8 @@ class CsvValidation
      * @param string $tva
      * @return bool
      */
-    private function isTvaValid($tva)
+    private
+    function isTvaValid($tva)
     {
         // On vérifie l'existence du SIREN
         $siren = $this->tva2Siren($tva);
@@ -218,7 +249,8 @@ class CsvValidation
      *      Le SIRET de l'entreprise.
      * @return bool
      */
-    private function isRaisonSocialeValid($raisonSociale, $siren, $siret)
+    private
+    function isRaisonSocialeValid($raisonSociale, $siren, $siret)
     {
         if (array_key_exists($siren, $this->entreprisesBySiren)) {
             similar_text($raisonSociale, $this->entreprisesBySiren[$siren]['raison_sociale'], $percent);
@@ -249,7 +281,8 @@ class CsvValidation
      *      Le SIRET de l'établissement.
      * @return bool
      */
-    private function isAdresseValid($adresse, $siret)
+    private
+    function isAdresseValid($adresse, $siret)
     {
         if (array_key_exists($siret, $this->entreprisesBySiret)) {
             similar_text($adresse, $this->entreprisesBySiret[$siret]['adresse'], $percent);
@@ -274,7 +307,8 @@ class CsvValidation
      *      Le SIRET de l'établissement.
      * @return bool
      */
-    private function isCodePostalValid($codePostal, $siret)
+    private
+    function isCodePostalValid($codePostal, $siret)
     {
         if (array_key_exists($siret, $this->entreprisesBySiret)) {
             if ($codePostal == $this->entreprisesBySiret[$siret]['code_postal'])
@@ -298,7 +332,8 @@ class CsvValidation
      *      Le SIRET de l'établissement.
      * @return bool
      */
-    private function isVilleValid($ville, $siret)
+    private
+    function isVilleValid($ville, $siret)
     {
         if (array_key_exists($siret, $this->entreprisesBySiret)) {
             similar_text($ville, $this->entreprisesBySiret[$siret]['ville'], $percent);
@@ -316,10 +351,11 @@ class CsvValidation
      * @param string $tel
      * @return bool
      */
-    private function isTelValid($tel)
+    private
+    function isTelValid($tel)
     {
-        if (preg_match("#^((\+33)|0)[1-9]([-\/. ]?[0-9]{2}){4}( +)?$#", $tel)
-            || strpos($tel, '_')
+        if (preg_match("#^(( +)?((\+33)|0))[1-9](( +)?([-\/. ]?[0-9]{2})){4}( +)?$#", $tel)
+            || strpos($tel, '_') !==false
             || $tel === '')
             return true;
         else
@@ -332,7 +368,8 @@ class CsvValidation
      * @param string $profilUtilisateur
      * @return bool
      */
-    private function isProfilUtilisateurValid($profilUtilisateur)
+    private
+    function isProfilUtilisateurValid($profilUtilisateur)
     {
         if ($profilUtilisateur === '3' || $profilUtilisateur === '4' || $profilUtilisateur === '5' || $profilUtilisateur === '6')
             return true;
@@ -346,7 +383,8 @@ class CsvValidation
      * @param string $siret
      * @return bool
      */
-    private function isSiretValid($siret)
+    private
+    function isSiretValid($siret)
     {
         return array_key_exists($siret, $this->entreprisesBySiret);
     }
@@ -355,7 +393,8 @@ class CsvValidation
      * @param string $accord
      * @return int
      */
-    private function checkAccord($accord)
+    private
+    function checkAccord($accord)
     {
         if ($accord === 'IF')
             return 0;
@@ -369,7 +408,8 @@ class CsvValidation
      * @param string $langue
      * @return bool
      */
-    private function isLangueValid($langue)
+    private
+    function isLangueValid($langue)
     {
         for ($i = 0; $i < count(self::$languages); $i++) {
             if ($langue === self::$languages[$i])
@@ -387,7 +427,8 @@ class CsvValidation
      * @param string $typeCLient
      * @return bool
      */
-    private function isTypeClientValid($typeCLient)
+    private
+    function isTypeClientValid($typeCLient)
     {
         if ($typeCLient === 'b2b' || $typeCLient === 'b2c')
             return true;
@@ -402,7 +443,8 @@ class CsvValidation
      * @param string $siret
      * @return bool
      */
-    private function tvaSiretMatch($tva, $siret)
+    private
+    function tvaSiretMatch($tva, $siret)
     {
         if ($this->tva2Siren($tva) === $this->siret2Siren($siret))
             return true;
@@ -414,7 +456,8 @@ class CsvValidation
      * @param $siret
      * @return bool|string
      */
-    private function siret2Siren($siret)
+    private
+    function siret2Siren($siret)
     {
         return substr($siret, 0, 9);
     }
@@ -423,7 +466,8 @@ class CsvValidation
      * @param $siren
      * @return string
      */
-    private function siren2Tva($siren)
+    private
+    function siren2Tva($siren)
     {
         $tvaKey = (12 + 3 * ($siren % 97)) % 97;
         $tva = $tvaKey . $siren;
@@ -440,10 +484,12 @@ class CsvValidation
      * @param $tva
      * @return string
      */
-    private function tva2Siren($tva)
+    private
+    function tva2Siren($tva)
     {
         $siren = substr($tva, -9);
 
         return $siren ?: '';
     }
+
 }
