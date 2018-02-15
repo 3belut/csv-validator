@@ -253,12 +253,12 @@ class CsvValidation
     function isRaisonSocialeValid($raisonSociale, $siren, $siret)
     {
         if (array_key_exists($siren, $this->entreprisesBySiren)) {
-            similar_text($raisonSociale, $this->entreprisesBySiren[$siren]['raison_sociale'], $percent);
+            similar_text(mb_strtolower($raisonSociale), mb_strtolower($this->entreprisesBySiren[$siren]['raison_sociale']), $percent);
             if ($percent > 50)
                 return true;
             else
                 return false;
-        } elseif (array_key_exists($siret, $this->entreprisesBySiret)) {
+        } elseif (array_key_exists(mb_strtolower($siret), mb_strtolower($this->entreprisesBySiret))) {
             similar_text($raisonSociale, $this->entreprisesBySiret[$siret]['raison_sociale'], $percent);
             if ($percent > 50)
                 return true;
@@ -285,7 +285,7 @@ class CsvValidation
     function isAdresseValid($adresse, $siret)
     {
         if (array_key_exists($siret, $this->entreprisesBySiret)) {
-            similar_text($adresse, $this->entreprisesBySiret[$siret]['adresse'], $percent);
+            similar_text(mb_strtolower($adresse), mb_strtolower($this->entreprisesBySiret[$siret]['adresse']), $percent);
             if ($percent > 80)
                 return true;
             else
@@ -336,7 +336,7 @@ class CsvValidation
     function isVilleValid($ville, $siret)
     {
         if (array_key_exists($siret, $this->entreprisesBySiret)) {
-            similar_text($ville, $this->entreprisesBySiret[$siret]['ville'], $percent);
+            similar_text(mb_strtolower($ville), mb_strtolower($this->entreprisesBySiret[$siret]['ville']), $percent);
             if ($percent > 90)
                 return true;
             else
