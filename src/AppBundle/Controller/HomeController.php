@@ -121,7 +121,7 @@ class HomeController extends Controller
             $session->set('tests', serialize($tests));
 
             // On retourne la page contenant la barre de progression
-            return $this->redirectToRoute('running');
+            return $this->render('running.html.twig');
         }
 
         // On retourne le formulaire
@@ -143,7 +143,6 @@ class HomeController extends Controller
 
         $result = $csvValidation->checkCsv($csv->getContent(), $tests);
 
-
         $session->set('valid', serialize($result['valid']));
         $session->set('invalid', serialize($result['invalid']));
 
@@ -158,6 +157,7 @@ class HomeController extends Controller
     public function resultsAction(SessionInterface $session)
     {
         $tests = unserialize($session->get('tests'));
+        $invalid = unserialize($session->get('invalid'));
 
         $nameTests = array_keys($tests, 1);
         for ($i = 0; $i < count($nameTests); $i++) {
@@ -185,8 +185,10 @@ class HomeController extends Controller
                     break;
             }
         }
-       
-        return $this->render('results.html.twig');
+
+        return $this->render('results.html.twig', array(
+            'lignesInvalides' => count($invalid),
+        ));
     }
 
     /**
@@ -239,7 +241,6 @@ class HomeController extends Controller
         $invalid = unserialize($session->get('invalid'));
 
         $file = $csv->array2Csv($invalid, false);
-
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
