@@ -47,10 +47,6 @@ class HomeController extends Controller
                 'label' => 'Ville',
                 'required' => false
             ))
-            ->add('emailChecked', CheckboxType::class, array(
-                'label' => 'Email',
-                'required' => false
-            ))
             ->add('telChecked', CheckboxType::class, array(
                 'label' => 'Numéro de télephone',
                 'required' => false
@@ -110,7 +106,6 @@ class HomeController extends Controller
                 'adresse' => $fileUpload->isAdresseChecked(),
                 'codePostal' => $fileUpload->isCodePostalChecked(),
                 'ville' => $fileUpload->isVilleChecked(),
-                'email' => $fileUpload->isEmailChecked(),
                 'tel' => $fileUpload->isTelChecked(),
                 'profilUtilisateur' => $fileUpload->isProfilUtilisateurChecked(),
                 'siret' => $fileUpload->isSiretChecked(),
