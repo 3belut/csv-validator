@@ -264,8 +264,8 @@ class CsvValidation
                 return true;
             else
                 return false;
-        } elseif (array_key_exists(mb_strtolower($siret), mb_strtolower($this->entreprisesBySiret))) {
-            similar_text($raisonSociale, $this->entreprisesBySiret[$siret]['raison_sociale'], $percent);
+        } elseif (array_key_exists($siret, $this->entreprisesBySiret)) {
+            similar_text(mb_strtolower($raisonSociale), mb_strtolower($this->entreprisesBySiret[$siret]['raison_sociale']), $percent);
             if ($percent > 50)
                 return true;
             else
