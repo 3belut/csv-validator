@@ -10,7 +10,18 @@
             <a href="valid" class="w3-button w3-orange">Valide</a>
             <a href="invalid" class="w3-button w3-orange">Invalide ({{ lignesInvalides }})</a>
         </div>
-        <p align="center"><b> Attention</b> le fichier invalide contient une colonne supplémentaire permettant de vous
-            indiquer quelles colonnes possèdent des erreurs.</p>
+        <div class="w3-content" style="width: 50%">
+            <p align="center">Fichier traité en {{ time }} secondes, avec les tests suivants :</p>
+            <ul class="w3-ul w3-card-4">
+                {% for test in tests %}
+                    <li>{{ test }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="w3-container w3-center">
+            <p align="center"><b> Attention</b> : le fichier invalide contient une colonne supplémentaire permettant de
+                vous
+                indiquer quelles colonnes possèdent des erreurs.</p>
+        </div>
     </div>
 {% endblock %}

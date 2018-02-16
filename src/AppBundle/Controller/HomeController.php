@@ -141,10 +141,15 @@ class HomeController extends Controller
         $csv = unserialize($session->get('csv'));
         $tests = unserialize($session->get('tests'));
 
+        $start = microtime(TRUE);
         $result = $csvValidation->checkCsv($csv->getContent(), $tests);
+        $stop = microtime(TRUE);
+
+        $executionTime = $stop - $start;
 
         $session->set('valid', serialize($result['valid']));
         $session->set('invalid', serialize($result['invalid']));
+        $session->set('time', $executionTime);
 
         return new Response(json_encode(0));
     }
@@ -158,6 +163,7 @@ class HomeController extends Controller
     {
         $tests = unserialize($session->get('tests'));
         $invalid = unserialize($session->get('invalid'));
+        $time = $session->get('time');
 
         $nameTests = array_keys($tests, 1);
         for ($i = 0; $i < count($nameTests); $i++) {
@@ -188,6 +194,8 @@ class HomeController extends Controller
 
         return $this->render('results.html.twig', array(
             'lignesInvalides' => count($invalid),
+            'tests' => $nameTests,
+            'time' => round($time, 2)
         ));
     }
 
