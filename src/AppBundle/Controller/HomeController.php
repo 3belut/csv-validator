@@ -84,7 +84,9 @@ class HomeController extends Controller
                 'required' => false
             ))
             ->add('file', FileType::class)
-            ->add('send', SubmitType::class)
+            ->add('send', SubmitType::class, array(
+                'label' => 'Envoyer'
+            ))
             ->getForm();
 
         $form->handleRequest($request);

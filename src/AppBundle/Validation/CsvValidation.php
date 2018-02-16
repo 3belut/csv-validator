@@ -105,7 +105,7 @@ class CsvValidation
         $erreurs = '';
         $siretValide = false;
         $sirenValide = false;
-        if ($row['siret']==='' && $row['tva_intra']==='' && $row['code_client'] === ''){
+        if ($row['siret'] === '' && $row['tva_intra'] === '' && $row['code_client'] === '') {
             $erreurs .= 'Il faut au moins la tva, le siret ou le code client - ';
         }
 

@@ -1,12 +1,9 @@
 {% extends 'base.html.twig' %}
 
-
+{% block title %}Qweeby{% endblock %}
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/template.css') }}">
 {% endblock %}
-{% block title %}Qweeby{% endblock %}
-{% block head %}
-    <meta charset="utf-8"/>{% endblock %}
 
 {% block body %}
     {% if alert %}
@@ -16,32 +13,30 @@
             };
         </script>
     {% endif %}
-    <div class="header">
-        <center>
-            <a href="../../../web/css/template.css">
-                <img width="30%" height="30%" class="logo_desktop" src="{{ asset('logo1.png') }}" alt="">
-            </a>
-        </center>
+    <div align="center" class="header">
+        <a href="{{ path('homepage') }}">
+            <img width="30%" height="30%" class="logo_desktop" src="{{ asset('logo1.png') }}" alt="">
+        </a>
     </div>
 
     <div class="corps">
         <br>
         {{ form_start(form) }}
         <h1>1<sup>ère</sup> étape : Sélectionner votre fichier CSV</h1>
-        <center>
+        <div align="center">
             {{ form_widget(form.file, {'attr': {'class': 'input-file', 'name':'csv'}}) }}
             <div class="csv">
                 <label class="label-file" for="{{ form.file.vars.id }}" id="file-drag"
-                       title="Ouvrir l'explorateur de fichier et sélectionner un fichier CSV.">Ouvrir...</label>
+                       title="Ouvrir l'explorateur de fichier et sélectionner un fichier CSV.">Sélectionner un fichier...</label>
             </div>
             <a title="Cliquez ici pour télecharger un fichier CSV modèle." class="topito" href="aide.pdf"
                target="_blank">Besoin d'aide?</a>
-        </center>
+        </div>
 
         <br>
         <h1 title="Utiliser les checkbox pour traiter votre CSV avec les critères voulus.">2<sup>ème</sup> étape :
             Choisissez vos critères</h1>
-        <center>
+        <div align="center">
             <div class="grey">
                 <label class="container">Tva intracommunautaire
                     {{ form_widget(form.tvaChecked) }}
@@ -105,11 +100,11 @@
             </div>
             <label title="Cliquez ici pour avoir un explicatif de chaque critère." class="topito">Besoin
                 d'aide?</label>
-        </center>
+        </div>
 
         <br>
         <h1>3<sup>ème</sup> étape : Démarrer le traitement</h1>
-        <center>
+        <div align="center">
             <div class="grey">
                 <br>
 
@@ -117,7 +112,7 @@
                 {#<input title="Commencer le traitement." class="envoyer_upload" type="submit" name="action"
                        value="Lancer" id="valide">#}
             </div>
-        </center>
+        </div>
         {{ form_end(form) }}
     </div>
 
@@ -137,5 +132,4 @@
                 document.getElementById('checkMarkCoord').style.display = 'none';
             }
         }</script>
-
 {% endblock %}

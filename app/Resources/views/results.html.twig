@@ -4,11 +4,13 @@
     <div class="w3-content" style="max-width:1400px">
         <div class="w3-container w3-center">
             <header>
-                <img src="logo.png" alt="logo"/>
+                <a href="{{ path('homepage') }}">
+                    <img src="logo.png" alt="logo"/>
+                </a>
                 <p class="" style="font-size: 30px">CSV Validator</p>
             </header>
-            <a href="valid" class="w3-button w3-orange">Valide</a>
-            <a href="invalid" class="w3-button w3-orange">Invalide ({{ lignesInvalides }})</a>
+            <a href="{{ path('valid') }}" class="w3-button w3-orange">Valide</a>
+            <a href="{{ path('invalid') }}" class="w3-button w3-orange">Invalide ({{ lignesInvalides }})</a>
         </div>
         <div class="w3-content" style="width: 50%">
             <p align="center">Fichier traité en {{ time }} secondes, avec les tests suivants :</p>
