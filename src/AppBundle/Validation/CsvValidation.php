@@ -116,7 +116,7 @@ class CsvValidation
                 $erreurs .= 'tva - ';
         }
 
-        if ($tests['siret'] && $row['siret'] !== '') {
+        if ($tests['siret'] && $row['siret'] !== '' && ($this->tvaToPays($row['tva_intra']) === 'FR' || strpos(strtoupper($row['pays']), 'FRANCE') !== false || $row['pays'] === 'FR')) {
             if ($this->isSiretValid($row['siret'])) {
                 $siretValide = true;
                 if ($tests['replaceTva'] && $row['tva_intra'] === '') {
@@ -479,4 +479,9 @@ class CsvValidation
         return $siren ?: '';
     }
 
+    private function tvaToPays($tva)
+    {
+        $countryCode = substr($tva, 0, 2);
+        return $countryCode ?: '';
+    }
 }
