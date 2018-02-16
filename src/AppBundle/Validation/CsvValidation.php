@@ -200,7 +200,7 @@ class CsvValidation
         }
 
         // Si les deux cases TVA et Siret sont cochées et que les deux champs sont remplis, on vérifie la correspondance
-        if ($tests['tva'] && $tests['siret'] && $row['tva_intra'] !== '' && $row['siret'] !== '') {
+        if ($tests['tva'] && $tests['siret'] && $row['tva_intra'] !== '' && $row['siret'] !== '' && ($this->tvaToPays($row['tva_intra']) === 'FR' || strpos(strtoupper($row['pays']), 'FRANCE') !== false || $row['pays'] === 'FR')) {
             if (!$this->tvaSiretMatch($row['tva_intra'], $row['siret']))
                 $erreurs .= 'correspondance tva/siret -';
         }
