@@ -109,8 +109,8 @@ class CsvValidation
             $erreurs .= 'Il faut au moins la tva, le siret ou le code client - ';
         }
 
-        if ($tests['siret']) {
-            if ($row['siret'] !== '' && $this->isSiretValid($row['siret'])) {
+        if ($tests['siret'] && $row['siret'] !== '') {
+            if ($this->isSiretValid($row['siret'])) {
                 $siretValide = true;
                 if ($tests['replaceTva'] && $row['tva_intra'] === '') {
                     $siren = $this->siret2Siren($row['siret']);
@@ -121,8 +121,8 @@ class CsvValidation
                 $erreurs .= 'siret - ';
         }
 
-        if ($tests['tva']) {
-            if ($row['tva_intra'] !== '' && $this->isTvaValid($row['tva_intra'])) {
+        if ($tests['tva'] && $row['tva_intra'] !== '') {
+            if ($this->isTvaValid($row['tva_intra'])) {
                 $sirenValide = true;
             } else
                 $erreurs .= 'tva - ';
