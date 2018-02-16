@@ -132,7 +132,7 @@ class CsvValidation
             if (!$this->isRaisonSocialeValid($row['raison_sociale'], $this->tva2Siren($row['tva_intra']), $row['siret'])) {
                 if ($tests['replaceCoordonnees'] && $siretValide) {
                     $row['raison_sociale'] = $this->entreprisesBySiret[$row['siret']]['raison_sociale'];
-                } else if ($tests['replaceCoordonnees'] && $sirenValide ) {
+                } else if ($tests['replaceCoordonnees'] && $sirenValide) {
                     $siren = $this->tva2Siren($row['tva_intra']);
                     $row['raison_sociale'] = $this->entreprisesBySiren[$siren]['raison_sociale'];
                 } else
