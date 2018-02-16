@@ -202,7 +202,7 @@ class CsvValidation
         // Si les deux cases TVA et Siret sont cochées et que les deux champs sont remplis, on vérifie la correspondance
         if ($tests['tva'] && $tests['siret'] && $row['tva_intra'] !== '' && $row['siret'] !== '') {
             if (!$this->tvaSiretMatch($row['tva_intra'], $row['siret']))
-                $erreurs .= 'correspondance tva/siret';
+                $erreurs .= 'correspondance tva/siret -';
         }
 
         // On retire l'éventuel dernier tiret
@@ -227,7 +227,6 @@ class CsvValidation
             if ($this->siren2Tva($siren) === $tva)
                 return true;
         }
-
         // A ce stade, le numéro de TVA n'a pas été trouvé dans la base SIREN, on tente un appel à VIES
         if ($this->vies->isValid($tva))
             return true;
