@@ -110,7 +110,7 @@ class CsvValidation
         }
 
         if ($tests['siret']) {
-            if ($this->isSiretValid($row['siret'])) {
+            if ($row['siret'] !== '' && $this->isSiretValid($row['siret'])) {
                 $siretValide = true;
                 if ($tests['replaceTva'] && $row['tva_intra'] === '') {
                     $siren = $this->siret2Siren($row['siret']);
@@ -122,7 +122,7 @@ class CsvValidation
         }
 
         if ($tests['tva']) {
-            if ($this->isTvaValid($row['tva_intra'])) {
+            if ($row['tva_intra'] !== '' && $this->isTvaValid($row['tva_intra'])) {
                 $sirenValide = true;
             } else
                 $erreurs .= 'tva - ';
