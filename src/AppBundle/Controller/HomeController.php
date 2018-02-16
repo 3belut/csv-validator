@@ -155,8 +155,37 @@ class HomeController extends Controller
      *
      * @Route("/results", name="results")
      */
-    public function resultsAction()
+    public function resultsAction(SessionInterface $session)
     {
+        $tests = unserialize($session->get('tests'));
+
+        $nameTests = array_keys($tests, 1);
+        for ($i = 0; $i < count($nameTests); $i++) {
+            switch ($nameTests[$i]) {
+                case "raisonSociale":
+                    $nameTests[$i] = "Raison Sociale";
+                    break;
+                case "codePostal":
+                    $nameTests[$i] = "Code postal";
+                    break;
+                case "tel":
+                    $nameTests[$i] = "Numéro de téléphone";
+                    break;
+                case "profilUtilisateur":
+                    $nameTests[$i] = "Profil utilisateur";
+                    break;
+                case "typeClient":
+                    $nameTests[$i] = "Type client";
+                    break;
+                case "replaceTva":
+                    $nameTests[$i] = "Remplacement de la TVA";
+                    break;
+                case "replaceCoordonnees":
+                    $nameTests[$i] = "Remplacement de la raison sociale, du code postal, de la ville et de l'adresse";
+                    break;
+            }
+        }
+       
         return $this->render('results.html.twig');
     }
 
