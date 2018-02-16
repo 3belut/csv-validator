@@ -109,6 +109,13 @@ class CsvValidation
             $erreurs .= 'Il faut au moins la tva, le siret ou le code client - ';
         }
 
+        if ($tests['tva'] && $row['tva_intra'] !== '') {
+            if ($this->isTvaValid($row['tva_intra'])) {
+                $sirenValide = true;
+            } else
+                $erreurs .= 'tva - ';
+        }
+
         if ($tests['siret'] && $row['siret'] !== '') {
             if ($this->isSiretValid($row['siret'])) {
                 $siretValide = true;
@@ -121,18 +128,11 @@ class CsvValidation
                 $erreurs .= 'siret - ';
         }
 
-        if ($tests['tva'] && $row['tva_intra'] !== '') {
-            if ($this->isTvaValid($row['tva_intra'])) {
-                $sirenValide = true;
-            } else
-                $erreurs .= 'tva - ';
-        }
-
         if ($tests['raisonSociale']) {
             if (!$this->isRaisonSocialeValid($row['raison_sociale'], $this->tva2Siren($row['tva_intra']), $row['siret'])) {
                 if ($tests['replaceCoordonnees'] && $siretValide) {
                     $row['raison_sociale'] = $this->entreprisesBySiret[$row['siret']]['raison_sociale'];
-                } else if ($tests['replaceCoordonnees'] && $sirenValide ) {
+                } else if ($tests['replaceCoordonnees'] && $sirenValide) {
                     $siren = $this->tva2Siren($row['tva_intra']);
                     $row['raison_sociale'] = $this->entreprisesBySiren[$siren]['raison_sociale'];
                 } else
